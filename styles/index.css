@@ -1,0 +1,285 @@
+/* ============================================================
+   THE WRONG RUBRIC — Global Styles
+   Cinematic dark theme with warm accents
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* Color palette */
+  --color-bg: #0a0a0f;
+  --color-bg-soft: #12121a;
+  --color-bg-card: #1a1a26;
+  --color-surface: #22222e;
+  --color-accent: #f59e0b;
+  --color-accent-soft: rgba(245, 158, 11, 0.15);
+  --color-accent-glow: rgba(245, 158, 11, 0.3);
+  --color-text: #f0ece4;
+  --color-text-muted: #8a8698;
+  --color-text-dim: #5a5668;
+  --color-border: rgba(255, 255, 255, 0.06);
+  --color-gradient-start: #f59e0b;
+  --color-gradient-end: #ef4444;
+
+  /* Typography */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Spacing */
+  --slide-padding: 80px;
+
+  /* Dynamic (controlled by settings panel) */
+  --heading-scale: 1;
+  --body-scale: 1;
+  --quote-scale: 1;
+  --slide-number-duration: 2s;
+  --slide-number-display: block;
+  --label-duration: 2s;
+  --label-display: block;
+}
+
+/* ---- Base slide styling ---- */
+.slidev-layout {
+  background: var(--color-bg) !important;
+  color: var(--color-text) !important;
+  font-family: var(--font-body) !important;
+  padding: var(--slide-padding) !important;
+  position: relative;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* ---- Typography ---- */
+h1 {
+  font-family: var(--font-display) !important;
+  font-weight: 700 !important;
+  font-size: calc(3.5rem * var(--heading-scale)) !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--color-text) !important;
+}
+
+h2 {
+  font-family: var(--font-display) !important;
+  font-weight: 700 !important;
+  font-size: calc(2.4rem * var(--heading-scale)) !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.01em !important;
+  color: var(--color-text) !important;
+}
+
+h3 {
+  font-family: var(--font-body) !important;
+  font-weight: 600 !important;
+  font-size: 1.5rem !important;
+  color: var(--color-text-muted) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+p, li {
+  font-size: calc(1.35rem * var(--body-scale)) !important;
+  line-height: 1.7 !important;
+  color: var(--color-text) !important;
+}
+
+/* ---- Blockquotes — the signature element ---- */
+blockquote {
+  border-left: 3px solid var(--color-accent) !important;
+  padding: 1.2rem 0 1.2rem 2rem !important;
+  margin: 2rem 0 !important;
+  background: transparent !important;
+}
+
+blockquote p {
+  font-family: var(--font-display) !important;
+  font-size: calc(2rem * var(--quote-scale)) !important;
+  font-style: italic !important;
+  line-height: 1.5 !important;
+  color: var(--color-text) !important;
+}
+
+/* ---- Lists ---- */
+ul, ol {
+  list-style: none !important;
+  padding-left: 0 !important;
+}
+
+li {
+  padding-left: 1.5rem !important;
+  position: relative;
+  margin-bottom: 0.75rem !important;
+}
+
+li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.7em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+/* ---- Accent text utility ---- */
+.accent {
+  color: var(--color-accent) !important;
+}
+
+.accent-gradient {
+  background: linear-gradient(135deg, var(--color-gradient-start), var(--color-gradient-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ---- Statement slides — big centered quotes ---- */
+.statement-slide {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center;
+  padding: 100px !important;
+}
+
+.statement-slide blockquote {
+  border-left: none !important;
+  padding: 0 !important;
+  max-width: 900px;
+}
+
+.statement-slide blockquote p {
+  font-size: 2.8rem !important;
+  line-height: 1.4 !important;
+}
+
+/* ---- Section divider slides ---- */
+.section-divider {
+  display: flex !important;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding-bottom: 120px !important;
+}
+
+.section-divider h1 {
+  font-size: 4.5rem !important;
+}
+
+.section-divider::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-accent), transparent);
+}
+
+/* ---- Numbers / stats ---- */
+.big-number {
+  font-family: var(--font-display) !important;
+  font-size: 8rem !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  background: linear-gradient(135deg, var(--color-gradient-start), var(--color-gradient-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ---- Subtle background grain texture ---- */
+.slidev-layout::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* ---- Iframe slides — full bleed, break out of layout padding ---- */
+.iframe-slide {
+  position: absolute !important;
+  inset: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.iframe-slide iframe {
+  width: 200% !important;
+  height: 200% !important;
+  border: none !important;
+  transform: scale(0.5);
+  transform-origin: 0 0;
+}
+
+.iframe-slide .iframe-label {
+  position: absolute;
+  bottom: 12px;
+  right: 16px;
+  z-index: 10;
+  background: rgba(10, 10, 15, 0.6);
+  backdrop-filter: blur(8px);
+  padding: 4px 12px;
+  border-radius: 6px;
+  display: var(--label-display);
+  animation: labelFade calc(var(--label-duration) * 1.5) ease forwards;
+}
+
+@keyframes labelFade {
+  0%, 40% { opacity: 0.7; }
+  100% { opacity: 0; pointer-events: none; }
+}
+
+.iframe-slide .iframe-label p {
+  font-size: 0.55rem !important;
+  color: var(--color-text-dim) !important;
+  margin: 0 !important;
+}
+
+/* ---- Slide transitions ---- */
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.4s ease;
+}
+
+/* ---- Progress bar at bottom ---- */
+.slidev-progress {
+  background: var(--color-accent) !important;
+}
+
+/* ---- v-click animation refinements ---- */
+.slidev-vclick-target {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.slidev-vclick-hidden {
+  opacity: 0 !important;
+  transform: translateY(12px);
+}
+
+/* ---- Code blocks ---- */
+pre, code {
+  font-family: var(--font-mono) !important;
+}
+
+.slidev-code {
+  background: var(--color-bg-soft) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 12px !important;
+}
+
+/* ---- Slide number ---- */
+.slidev-page-number {
+  font-family: var(--font-mono) !important;
+  color: var(--color-text-dim) !important;
+  font-size: 0.85rem !important;
+}
+
+/* ---- Hide cursor in presentation mode after inactivity ---- */
+.slidev-nav-go .cursor-none {
+  cursor: none !important;
+}
