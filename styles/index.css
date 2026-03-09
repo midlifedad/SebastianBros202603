@@ -1,11 +1,30 @@
 /* ============================================================
-   THE WRONG RUBRIC — Global Styles
+   THE WRONG RUBRIC — Design System
    Cinematic dark theme with warm accents
+
+   Canvas: 1920x1080 (Full HD)
+   --cs (canvas-scale) = 1920/980 ≈ 1.96
+   All scalable values use calc(Xrem * var(--cs)) so authors
+   can think in 980-canvas rem values while rendering at 1920.
+
+   TOKEN SYSTEM:
+   - Layout:     .layout-center, .layout-left, .layout-right, etc.
+   - Grid:       .slide-grid, .grid--center, .col-1 … .col-12
+   - Typography:  .t-display, .t-title, .t-body, .t-tag, etc.
+   - Spacing:     .mt-xs … .mt-4xl, .mb-md … .mb-xl, .gap-sm … .gap-4xl
+   - Components:  .tag, .pill, .card, .stat-block, .divider-v, .scrim, etc.
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,700&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ============================================================
+   1. ROOT VARIABLES
+   ============================================================ */
 
 :root {
+  /* Canvas scale: 1920 / 980 */
+  --cs: 1.959;
+
   /* Color palette */
   --color-bg: #0a0a0f;
   --color-bg-soft: #12121a;
@@ -21,13 +40,47 @@
   --color-gradient-start: #f59e0b;
   --color-gradient-end: #ef4444;
 
+  /* Extended accent palette */
+  --color-amber: #f59e0b;
+  --color-red: #ef4444;
+  --color-coral: #f97066;
+  --color-blue: #1a2ffb;
+  --color-sky: #38bdf8;
+  --color-teal: #2dd4bf;
+  --color-green: #c1ff00;
+  --color-violet: #8b5cf6;
+  --color-rose: #f43f8e;
+  --color-peach: #fb923c;
+
   /* Typography */
   --font-display: 'Playfair Display', Georgia, serif;
-  --font-body: 'Inter', -apple-system, sans-serif;
+  --font-editorial: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Spacing */
-  --slide-padding: 80px;
+  /* Spacing scale (base rem × --cs) */
+  --space-xs:   calc(0.5rem  * var(--cs));
+  --space-sm:   calc(0.75rem * var(--cs));
+  --space-md:   calc(1rem    * var(--cs));
+  --space-lg:   calc(1.5rem  * var(--cs));
+  --space-xl:   calc(2rem    * var(--cs));
+  --space-2xl:  calc(2.5rem  * var(--cs));
+  --space-3xl:  calc(3rem    * var(--cs));
+  --space-4xl:  calc(4rem    * var(--cs));
+
+  /* Section padding */
+  --pad-standard:  calc(5rem    * var(--cs));
+  --pad-wide:      calc(6.25rem * var(--cs));
+  --pad-generous:  calc(7.5rem  * var(--cs));
+  --pad-compact:   calc(3.75rem * var(--cs));
+  --pad-grid-h:    calc(3.125rem * var(--cs));
+
+  /* Easing */
+  --ease-primary: cubic-bezier(0.4, 0, 0.1, 1);
+  --ease-smooth: cubic-bezier(0.35, 0, 0, 1);
+  --ease-snappy: cubic-bezier(0.4, 0, 0, 1);
+  --ease-elastic: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-gentle: cubic-bezier(0.1, 0, 0.1, 1);
 
   /* Dynamic (controlled by settings panel) */
   --heading-scale: 1;
@@ -35,26 +88,31 @@
   --quote-scale: 1;
   --slide-number-duration: 2s;
   --slide-number-display: block;
+  --slide-number-left: auto;
+  --slide-number-right: calc(0.75rem * var(--cs));
   --label-duration: 2s;
   --label-display: block;
 }
 
-/* ---- Base slide styling ---- */
+/* ============================================================
+   2. BASE SLIDEV OVERRIDES
+   ============================================================ */
+
 .slidev-layout {
   background: var(--color-bg) !important;
   color: var(--color-text) !important;
   font-family: var(--font-body) !important;
-  padding: var(--slide-padding) !important;
+  padding: var(--pad-standard) !important;
   position: relative;
   height: 100%;
   box-sizing: border-box;
 }
 
-/* ---- Typography ---- */
+/* Markdown-generated headings (for slides using raw markdown) */
 h1 {
   font-family: var(--font-display) !important;
   font-weight: 700 !important;
-  font-size: calc(3.5rem * var(--heading-scale)) !important;
+  font-size: calc(3.5rem * var(--heading-scale) * var(--cs)) !important;
   line-height: 1.15 !important;
   letter-spacing: -0.02em !important;
   color: var(--color-text) !important;
@@ -63,7 +121,7 @@ h1 {
 h2 {
   font-family: var(--font-display) !important;
   font-weight: 700 !important;
-  font-size: calc(2.4rem * var(--heading-scale)) !important;
+  font-size: calc(2.4rem * var(--heading-scale) * var(--cs)) !important;
   line-height: 1.2 !important;
   letter-spacing: -0.01em !important;
   color: var(--color-text) !important;
@@ -72,44 +130,44 @@ h2 {
 h3 {
   font-family: var(--font-body) !important;
   font-weight: 600 !important;
-  font-size: 1.5rem !important;
+  font-size: calc(1.5rem * var(--cs)) !important;
   color: var(--color-text-muted) !important;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
 p, li {
-  font-size: calc(1.35rem * var(--body-scale)) !important;
+  font-size: calc(1.35rem * var(--body-scale) * var(--cs)) !important;
+  font-weight: 300 !important;
+  letter-spacing: -0.02em !important;
   line-height: 1.7 !important;
-  color: var(--color-text) !important;
+  color: var(--color-text);
 }
 
-/* ---- Blockquotes — the signature element ---- */
 blockquote {
   border-left: 3px solid var(--color-accent) !important;
-  padding: 1.2rem 0 1.2rem 2rem !important;
-  margin: 2rem 0 !important;
+  padding: var(--space-md) 0 var(--space-md) var(--space-xl) !important;
+  margin: var(--space-xl) 0 !important;
   background: transparent !important;
 }
 
 blockquote p {
   font-family: var(--font-display) !important;
-  font-size: calc(2rem * var(--quote-scale)) !important;
+  font-size: calc(2rem * var(--quote-scale) * var(--cs)) !important;
   font-style: italic !important;
   line-height: 1.5 !important;
   color: var(--color-text) !important;
 }
 
-/* ---- Lists ---- */
 ul, ol {
   list-style: none !important;
   padding-left: 0 !important;
 }
 
 li {
-  padding-left: 1.5rem !important;
+  padding-left: var(--space-lg) !important;
   position: relative;
-  margin-bottom: 0.75rem !important;
+  margin-bottom: var(--space-sm) !important;
 }
 
 li::before {
@@ -123,145 +181,36 @@ li::before {
   background: var(--color-accent);
 }
 
-/* ---- Accent text utility ---- */
-.accent {
-  color: var(--color-accent) !important;
-}
-
-.accent-gradient {
-  background: linear-gradient(135deg, var(--color-gradient-start), var(--color-gradient-end));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ---- Statement slides — big centered quotes ---- */
-.statement-slide {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center;
-  padding: 100px !important;
-}
-
-.statement-slide blockquote {
-  border-left: none !important;
-  padding: 0 !important;
-  max-width: 900px;
-}
-
-.statement-slide blockquote p {
-  font-size: 2.8rem !important;
-  line-height: 1.4 !important;
-}
-
-/* ---- Section divider slides ---- */
-.section-divider {
-  display: flex !important;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-end;
-  padding-bottom: 120px !important;
-}
-
-.section-divider h1 {
-  font-size: 4.5rem !important;
-}
-
-.section-divider::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--color-accent), transparent);
-}
-
-/* ---- Numbers / stats ---- */
-.big-number {
-  font-family: var(--font-display) !important;
-  font-size: 8rem !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
-  background: linear-gradient(135deg, var(--color-gradient-start), var(--color-gradient-end));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ---- Subtle background grain texture ---- */
+/* Subtle background grain */
 .slidev-layout::after {
   content: '';
   position: absolute;
   inset: 0;
   opacity: 0.03;
   pointer-events: none;
+  z-index: -1;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
 
-/* ---- Iframe slides — full bleed, break out of layout padding ---- */
-.iframe-slide {
-  position: absolute !important;
-  inset: 0 !important;
-  padding: 0 !important;
-  overflow: hidden;
-}
-
-.iframe-slide iframe {
-  width: 200% !important;
-  height: 200% !important;
-  border: none !important;
-  transform: scale(0.5);
-  transform-origin: 0 0;
-}
-
-.iframe-slide .iframe-label {
-  position: absolute;
-  bottom: 12px;
-  right: 16px;
-  z-index: 10;
-  background: rgba(10, 10, 15, 0.6);
-  backdrop-filter: blur(8px);
-  padding: 4px 12px;
-  border-radius: 6px;
-  display: var(--label-display);
-  animation: labelFade calc(var(--label-duration) * 1.5) ease forwards;
-}
-
-@keyframes labelFade {
-  0%, 40% { opacity: 0.7; }
-  100% { opacity: 0; pointer-events: none; }
-}
-
-.iframe-slide .iframe-label p {
-  font-size: 0.55rem !important;
-  color: var(--color-text-dim) !important;
-  margin: 0 !important;
-}
-
-/* ---- Slide transitions ---- */
+/* Transitions & animations */
 .slide-enter-active,
 .slide-leave-active {
   transition: all 0.4s ease;
 }
 
-/* ---- Progress bar at bottom ---- */
 .slidev-progress {
   background: var(--color-accent) !important;
 }
 
-/* ---- v-click animation refinements ---- */
 .slidev-vclick-target {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition: all 0.5s var(--ease-primary) !important;
 }
 
 .slidev-vclick-hidden {
   opacity: 0 !important;
-  transform: translateY(12px);
+  transform: translateY(16px);
 }
 
-/* ---- Code blocks ---- */
 pre, code {
   font-family: var(--font-mono) !important;
 }
@@ -272,14 +221,810 @@ pre, code {
   border-radius: 12px !important;
 }
 
-/* ---- Slide number ---- */
 .slidev-page-number {
   font-family: var(--font-mono) !important;
   color: var(--color-text-dim) !important;
-  font-size: 0.85rem !important;
+  font-size: calc(0.5rem * var(--cs)) !important;
 }
 
-/* ---- Hide cursor in presentation mode after inactivity ---- */
 .slidev-nav-go .cursor-none {
   cursor: none !important;
+}
+
+/* ============================================================
+   2.5. GRID SYSTEM
+   ============================================================ */
+
+.slidev-layout .slide-grid {
+  display: grid !important;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--space-sm);
+  width: 100%;
+  height: 100%;
+  padding: var(--pad-standard) !important;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.slide-grid.grid--center {
+  align-items: center !important;
+  justify-items: center;
+}
+
+.slide-grid.grid--top { align-items: start !important; }
+.slide-grid.grid--bottom { align-items: end !important; }
+.slide-grid.grid--tight { padding: var(--pad-compact) !important; }
+.slide-grid.grid--bleed { padding: 0 !important; }
+
+.col-1  { grid-column: span 1; }
+.col-2  { grid-column: span 2; }
+.col-3  { grid-column: span 3; }
+.col-4  { grid-column: span 4; }
+.col-5  { grid-column: span 5; }
+.col-6  { grid-column: span 6; }
+.col-7  { grid-column: span 7; }
+.col-8  { grid-column: span 8; }
+.col-9  { grid-column: span 9; }
+.col-10 { grid-column: span 10; }
+.col-11 { grid-column: span 11; }
+.col-12 { grid-column: span 12; }
+
+/* ============================================================
+   3. LAYOUT TOKENS
+   ============================================================ */
+
+/* Centered content — quotes, stats, statements */
+.layout-center {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center;
+  height: 100%;
+  padding: var(--pad-generous) !important;
+  position: relative;
+}
+
+/* Left-aligned content — text reveals, editorial */
+.layout-left {
+  display: flex !important;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+  height: 100%;
+  padding: var(--pad-standard) var(--pad-wide) !important;
+  position: relative;
+}
+
+/* Right-aligned content */
+.layout-right {
+  display: flex !important;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  height: 100%;
+  padding: var(--pad-standard) var(--pad-wide) !important;
+  position: relative;
+  text-align: right;
+}
+
+/* Bottom-left anchored — 3D overlays */
+.layout-bottom-left {
+  display: flex !important;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  text-align: left;
+  height: 100%;
+  padding: var(--pad-standard) var(--pad-wide) !important;
+  position: relative;
+}
+
+/* Center-right anchored — 3D overlays */
+.layout-center-right {
+  display: flex !important;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  height: 100%;
+  padding: var(--pad-standard) !important;
+  text-align: right;
+  position: relative;
+}
+
+/* Two-column split */
+.layout-split {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  align-items: center !important;
+  height: 100%;
+  padding: var(--pad-standard) !important;
+  position: relative;
+}
+
+/* Three-column stat split with divider */
+.layout-split-stat {
+  display: grid !important;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center !important;
+  height: 100%;
+  gap: 0;
+  padding: var(--pad-compact) var(--pad-standard) !important;
+}
+
+.layout-split-stat > :nth-child(1) {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: right;
+  padding-right: var(--pad-compact);
+}
+
+.layout-split-stat > :nth-child(3) {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  padding-left: var(--pad-compact);
+}
+
+/* Four-column card grid */
+.layout-grid-4 {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-md);
+  align-items: stretch;
+  height: 100%;
+  padding: var(--pad-compact) var(--pad-grid-h) !important;
+}
+
+/* Full-bleed — iframe, video, 3D backgrounds */
+.layout-bleed {
+  position: absolute !important;
+  inset: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+/* Text overlay on 3D/video — use with position modifiers */
+.layout-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 2;
+  display: flex !important;
+  flex-direction: column;
+  padding: var(--pad-standard) !important;
+}
+
+.layout-overlay.layout-overlay--tight {
+  padding: var(--pad-compact) !important;
+}
+
+.layout-overlay--bottom-left {
+  justify-content: flex-end;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.layout-overlay--center {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.layout-overlay--center-right {
+  justify-content: center;
+  align-items: flex-end;
+  text-align: right;
+}
+
+/* ============================================================
+   4. TYPOGRAPHY TOKENS
+   ============================================================ */
+
+/* --- Editorial Heading Scale (--font-editorial, weight 400) --- */
+
+.t-display {
+  font-family: var(--font-editorial) !important;
+  font-size: calc(5.5rem * var(--cs)) !important;
+  font-weight: 400 !important;
+  line-height: 1.05 !important;
+  letter-spacing: -0.04em !important;
+  color: var(--color-text);
+}
+
+.t-display-sm {
+  font-family: var(--font-editorial) !important;
+  font-size: calc(5rem * var(--cs)) !important;
+  font-weight: 400 !important;
+  line-height: 1.05 !important;
+  letter-spacing: -0.04em !important;
+  color: var(--color-text);
+}
+
+.t-title {
+  font-family: var(--font-editorial) !important;
+  font-size: calc(4.5rem * var(--cs)) !important;
+  font-weight: 400 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.03em !important;
+  color: var(--color-text);
+}
+
+.t-heading {
+  font-family: var(--font-editorial) !important;
+  font-size: calc(4rem * var(--cs)) !important;
+  font-weight: 400 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.03em !important;
+  color: var(--color-text);
+}
+
+.t-subheading {
+  font-family: var(--font-editorial) !important;
+  font-size: calc(3.5rem * var(--cs)) !important;
+  font-weight: 400 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.03em !important;
+  color: var(--color-text);
+}
+
+.t-subheading-sm {
+  font-family: var(--font-editorial) !important;
+  font-size: calc(3.2rem * var(--cs)) !important;
+  font-weight: 400 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.03em !important;
+  color: var(--color-text);
+}
+
+.t-subheading-xs {
+  font-family: var(--font-editorial) !important;
+  font-size: calc(2.5rem * var(--cs)) !important;
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--color-text);
+}
+
+.t-quote {
+  font-family: var(--font-editorial) !important;
+  font-size: calc(5.5rem * var(--cs)) !important;
+  font-weight: 400 !important;
+  font-style: italic;
+  line-height: 1.05 !important;
+  letter-spacing: -0.04em !important;
+  color: var(--color-text);
+}
+
+/* --- Stat Number Scale (--font-editorial, weight 300) --- */
+
+.t-stat-mega {
+  font-family: var(--font-editorial) !important;
+  font-size: calc(14rem * var(--cs)) !important;
+  font-weight: 300 !important;
+  line-height: 0.85 !important;
+  letter-spacing: -0.05em !important;
+}
+
+.t-stat-large {
+  font-family: var(--font-editorial) !important;
+  font-size: calc(11rem * var(--cs)) !important;
+  font-weight: 300 !important;
+  line-height: 0.85 !important;
+  letter-spacing: -0.05em !important;
+}
+
+.t-stat-big {
+  font-family: var(--font-display) !important;
+  font-size: calc(8rem * var(--cs)) !important;
+  font-weight: 900 !important;
+  line-height: 1.15 !important;
+}
+
+.t-stat-rolling {
+  font-family: var(--font-editorial) !important;
+  font-size: calc(6rem * var(--cs)) !important;
+  font-weight: 400 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.04em !important;
+  color: var(--color-text);
+}
+
+.t-stat-medium {
+  font-family: var(--font-editorial) !important;
+  font-size: calc(3.5rem * var(--cs)) !important;
+  font-weight: 300 !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.03em !important;
+}
+
+.t-stat-small {
+  font-family: var(--font-editorial) !important;
+  font-size: calc(2.5rem * var(--cs)) !important;
+  font-weight: 300 !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.t-panel-title {
+  font-family: var(--font-editorial) !important;
+  font-size: calc(1.4rem * var(--cs)) !important;
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--color-text);
+}
+
+/* --- Body Text Scale (--font-body, weight 300) --- */
+
+.t-body {
+  font-family: var(--font-body) !important;
+  font-size: calc(1.3rem * var(--cs)) !important;
+  font-weight: 300 !important;
+  line-height: 1.6 !important;
+  letter-spacing: -0.01em !important;
+  color: var(--color-text-muted);
+}
+
+.t-body-sm {
+  font-family: var(--font-body) !important;
+  font-size: calc(1.1rem * var(--cs)) !important;
+  font-weight: 300 !important;
+  line-height: 1.6 !important;
+  color: var(--color-text-muted);
+}
+
+.t-body-xs {
+  font-family: var(--font-body) !important;
+  font-size: calc(1rem * var(--cs)) !important;
+  font-weight: 300 !important;
+  line-height: 1.6 !important;
+  color: var(--color-text-muted);
+}
+
+.t-body-desc {
+  font-family: var(--font-body) !important;
+  font-size: calc(0.75rem * var(--cs)) !important;
+  font-weight: 300 !important;
+  line-height: 1.5 !important;
+  color: var(--color-text-muted);
+}
+
+.t-subtitle {
+  font-family: var(--font-body) !important;
+  font-size: calc(1.1rem * var(--cs)) !important;
+  font-weight: 300 !important;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.t-attribution {
+  font-family: var(--font-body) !important;
+  font-size: calc(0.85rem * var(--cs)) !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+}
+
+/* --- Mono Label Scale (--font-mono) --- */
+
+.t-tag {
+  font-family: var(--font-mono) !important;
+  font-size: calc(0.7rem * var(--cs)) !important;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.t-label {
+  font-family: var(--font-mono) !important;
+  font-size: calc(0.65rem * var(--cs)) !important;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.t-hint {
+  font-family: var(--font-mono) !important;
+  font-size: calc(0.65rem * var(--cs)) !important;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+}
+
+/* --- Typography Modifiers --- */
+
+.t--italic { font-style: italic !important; }
+
+.t--gradient {
+  background: linear-gradient(135deg, var(--color-gradient-start), var(--color-gradient-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.t--gradient-v {
+  background: linear-gradient(180deg, var(--color-text) 0%, var(--color-text-muted) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.t--accent {
+  color: var(--color-accent) !important;
+  -webkit-text-fill-color: var(--color-accent);
+}
+
+.t--muted { color: var(--color-text-muted) !important; }
+.t--dim { color: var(--color-text-dim) !important; }
+
+.t--shadow {
+  text-shadow: 0 0 60px rgba(10, 10, 15, 0.95), 0 0 120px rgba(10, 10, 15, 0.8);
+}
+
+.t--shadow-sm {
+  text-shadow: 0 0 20px rgba(10, 10, 15, 0.9), 0 0 40px rgba(10, 10, 15, 0.7);
+}
+
+/* ============================================================
+   5. SPACING TOKENS
+   ============================================================ */
+
+.mt-xs  { margin-top: var(--space-xs) !important; }
+.mt-sm  { margin-top: var(--space-sm) !important; }
+.mt-md  { margin-top: var(--space-md) !important; }
+.mt-lg  { margin-top: var(--space-lg) !important; }
+.mt-xl  { margin-top: var(--space-xl) !important; }
+.mt-2xl { margin-top: var(--space-2xl) !important; }
+.mt-3xl { margin-top: var(--space-3xl) !important; }
+.mt-4xl { margin-top: var(--space-4xl) !important; }
+
+.mb-xs  { margin-bottom: var(--space-xs) !important; }
+.mb-sm  { margin-bottom: var(--space-sm) !important; }
+.mb-md  { margin-bottom: var(--space-md) !important; }
+.mb-lg  { margin-bottom: var(--space-lg) !important; }
+.mb-xl  { margin-bottom: var(--space-xl) !important; }
+.mb-2xl { margin-bottom: var(--space-2xl) !important; }
+.mb-3xl { margin-bottom: var(--space-3xl) !important; }
+.mb-4xl { margin-bottom: var(--space-4xl) !important; }
+
+.ml-xs  { margin-left: var(--space-xs) !important; }
+.ml-sm  { margin-left: var(--space-sm) !important; }
+.ml-md  { margin-left: var(--space-md) !important; }
+.ml-lg  { margin-left: var(--space-lg) !important; }
+.ml-xl  { margin-left: var(--space-xl) !important; }
+.ml-2xl { margin-left: var(--space-2xl) !important; }
+.ml-3xl { margin-left: var(--space-3xl) !important; }
+.ml-4xl { margin-left: var(--space-4xl) !important; }
+
+.mr-xs  { margin-right: var(--space-xs) !important; }
+.mr-sm  { margin-right: var(--space-sm) !important; }
+.mr-md  { margin-right: var(--space-md) !important; }
+.mr-lg  { margin-right: var(--space-lg) !important; }
+.mr-xl  { margin-right: var(--space-xl) !important; }
+.mr-2xl { margin-right: var(--space-2xl) !important; }
+.mr-3xl { margin-right: var(--space-3xl) !important; }
+.mr-4xl { margin-right: var(--space-4xl) !important; }
+
+.px-xs  { padding-left: var(--space-xs) !important; padding-right: var(--space-xs) !important; }
+.px-sm  { padding-left: var(--space-sm) !important; padding-right: var(--space-sm) !important; }
+.px-md  { padding-left: var(--space-md) !important; padding-right: var(--space-md) !important; }
+.px-lg  { padding-left: var(--space-lg) !important; padding-right: var(--space-lg) !important; }
+.px-xl  { padding-left: var(--space-xl) !important; padding-right: var(--space-xl) !important; }
+.px-2xl { padding-left: var(--space-2xl) !important; padding-right: var(--space-2xl) !important; }
+.px-3xl { padding-left: var(--space-3xl) !important; padding-right: var(--space-3xl) !important; }
+.px-4xl { padding-left: var(--space-4xl) !important; padding-right: var(--space-4xl) !important; }
+
+.py-xs  { padding-top: var(--space-xs) !important; padding-bottom: var(--space-xs) !important; }
+.py-sm  { padding-top: var(--space-sm) !important; padding-bottom: var(--space-sm) !important; }
+.py-md  { padding-top: var(--space-md) !important; padding-bottom: var(--space-md) !important; }
+.py-lg  { padding-top: var(--space-lg) !important; padding-bottom: var(--space-lg) !important; }
+.py-xl  { padding-top: var(--space-xl) !important; padding-bottom: var(--space-xl) !important; }
+.py-2xl { padding-top: var(--space-2xl) !important; padding-bottom: var(--space-2xl) !important; }
+.py-3xl { padding-top: var(--space-3xl) !important; padding-bottom: var(--space-3xl) !important; }
+.py-4xl { padding-top: var(--space-4xl) !important; padding-bottom: var(--space-4xl) !important; }
+
+/* Text alignment */
+.text-center { text-align: center !important; }
+.text-left   { text-align: left !important; }
+.text-right  { text-align: right !important; }
+
+.gap-xs  { gap: var(--space-xs) !important; }
+.gap-sm  { gap: var(--space-sm) !important; }
+.gap-md  { gap: var(--space-md) !important; }
+.gap-lg  { gap: var(--space-lg) !important; }
+.gap-xl  { gap: var(--space-xl) !important; }
+.gap-2xl { gap: var(--space-2xl) !important; }
+.gap-3xl { gap: var(--space-3xl) !important; }
+.gap-4xl { gap: var(--space-4xl) !important; }
+
+/* ============================================================
+   6. COMPONENT TOKENS
+   ============================================================ */
+
+/* Tag — mono uppercase label with bottom margin */
+.tag {
+  font-family: var(--font-mono) !important;
+  font-size: calc(0.7rem * var(--cs)) !important;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent) !important;
+  margin-bottom: var(--space-lg);
+}
+
+/* Pill — bordered capsule */
+.pill {
+  font-family: var(--font-mono) !important;
+  font-size: calc(0.7rem * var(--cs)) !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent) !important;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: 100px;
+  background: rgba(245, 158, 11, 0.06);
+}
+
+.pill-row {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+/* Hint pill — subtle bordered capsule */
+.hint-pill {
+  font-family: var(--font-mono) !important;
+  font-size: calc(0.65rem * var(--cs)) !important;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-dim) !important;
+  border: 1px solid var(--color-border);
+  padding: var(--space-xs) calc(1.25rem * var(--cs));
+  border-radius: 100px;
+}
+
+/* Accent line — inline horizontal accent for attributions */
+.accent-line {
+  display: inline-block;
+  width: var(--space-2xl);
+  height: 1px;
+  background: var(--color-accent);
+  vertical-align: middle;
+  margin-right: var(--space-sm);
+}
+
+/* Stat block — number + label pair */
+.stat-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-row {
+  display: flex;
+  gap: var(--space-4xl);
+}
+
+.stat-label {
+  font-family: var(--font-body) !important;
+  font-size: calc(0.8rem * var(--cs)) !important;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-dim) !important;
+  margin-top: var(--space-xs);
+}
+
+/* Card — for grid layouts */
+.card {
+  background: var(--color-bg-soft);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: var(--space-lg) calc(1rem * var(--cs));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.card--active {
+  border-color: rgba(245, 158, 11, 0.3);
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.06) 0%, var(--color-bg-soft) 100%);
+}
+
+.card-number {
+  font-family: var(--font-editorial) !important;
+  font-size: calc(6rem * var(--cs)) !important;
+  font-weight: 300 !important;
+  line-height: 1 !important;
+  color: rgba(255, 255, 255, 0.04) !important;
+  position: absolute;
+  top: -10px;
+  right: 12px;
+}
+
+/* Vertical divider — gradient line */
+.divider-v {
+  width: 1px;
+  height: 60%;
+  background: linear-gradient(180deg, transparent, var(--color-accent), transparent);
+}
+
+/* Dark scrim overlay for video/3D */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10,10,15,0.3) 0%, rgba(10,10,15,0.7) 50%, rgba(10,10,15,0.95) 100%);
+  z-index: 1;
+}
+
+/* Accent color utilities */
+.accent { color: var(--color-accent) !important; }
+
+.accent-gradient {
+  background: linear-gradient(135deg, var(--color-gradient-start), var(--color-gradient-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Body text background glow — for readability over 3D */
+.text-glow {
+  background: radial-gradient(ellipse at center, rgba(10, 10, 15, 0.85) 0%, transparent 70%);
+  padding: var(--space-lg) var(--space-xl);
+  margin-left: calc(-1 * var(--space-xl));
+}
+
+/* Split context — full-width bottom text for split layouts */
+.split-context {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-top: var(--space-xl);
+}
+
+/* ============================================================
+   7. SPECIAL SLIDE LAYOUTS
+   (Unique structures that can't be fully expressed by
+    generic layout tokens alone)
+   ============================================================ */
+
+/* --- Browser frame slides --- */
+.browser-frame-slide {
+  position: absolute !important;
+  inset: 0 !important;
+  padding: calc(1.5rem * var(--cs)) !important;
+  display: flex !important;
+  align-items: stretch !important;
+  justify-content: center !important;
+}
+
+/* Fade-in for v-click children inside browser-frame slides */
+.browser-frame-slide > .slidev-vclick-target {
+  transition: opacity 0.8s ease !important;
+  transform: none !important;
+}
+.browser-frame-slide > .slidev-vclick-hidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* --- Video overlay slide --- */
+.video-slide {
+  position: absolute !important;
+  inset: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.video-slide video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- Theme demo (dark/light halves) --- */
+.theme-demo {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  height: 100%;
+  padding: 0 !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-demo .theme-half {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--pad-compact);
+  position: relative;
+}
+
+.theme-demo .theme-half.dark-half {
+  background: #0a0a0f;
+  color: #f0ece4;
+}
+
+.theme-demo .theme-half.light-half {
+  background: #f0ece4;
+  color: #0a0a0f;
+}
+
+.theme-demo .theme-half.light-half .t-tag,
+.theme-demo .theme-half.light-half .t-label,
+.theme-demo .theme-half.light-half .tag {
+  color: var(--color-blue) !important;
+}
+
+/* --- Decorated statement (positioned lines) --- */
+.deco-lines {
+  position: relative;
+  width: 100%;
+  max-width: calc(44rem * var(--cs));
+  padding: var(--space-3xl) 0;
+}
+
+.deco-lines .line-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.deco-lines .line-bottom-left {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.deco-lines .line-bottom-right {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+/* --- Section divider accent line --- */
+.section-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-accent), transparent);
+}
+
+/* --- Statement slide blockquote override --- */
+.layout-center blockquote {
+  border-left: none !important;
+  padding: 0 !important;
+  max-width: calc(56rem * var(--cs));
+}
+
+.layout-center blockquote p {
+  font-size: calc(2.8rem * var(--cs)) !important;
+  line-height: 1.4 !important;
+}
+
+/* --- Line wrapper (constrains DrawLine width) --- */
+.line-wrapper {
+  width: calc(17.5rem * var(--cs));
+  margin: var(--space-2xl) 0;
+}
+
+/* --- Compact list (for list-heavy slides) --- */
+.slide-compact-list li {
+  font-size: calc(1.1rem * var(--body-scale) * var(--cs)) !important;
+  line-height: 1.5 !important;
+  margin-bottom: var(--space-xs) !important;
+}
+
+.slide-compact-list blockquote p {
+  font-size: calc(1.6rem * var(--cs)) !important;
+  line-height: 1.4 !important;
 }

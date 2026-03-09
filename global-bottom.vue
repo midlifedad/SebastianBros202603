@@ -40,15 +40,16 @@ watch(currentPage, () => {
 <style scoped>
 .slide-footer {
   position: fixed;
-  bottom: 8px;
-  left: 12px;
+  bottom: calc(0.5rem * var(--cs, 1));
+  left: var(--slide-number-left, calc(0.75rem * var(--cs, 1)));
+  right: var(--slide-number-right, auto);
   z-index: 100;
   pointer-events: none;
 }
 
 .slide-number {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.5rem;
+  font-size: calc(0.5rem * var(--cs, 1));
   color: rgba(138, 134, 152, 0.5);
   letter-spacing: 0.05em;
 }
