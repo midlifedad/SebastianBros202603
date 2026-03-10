@@ -1028,3 +1028,100 @@ pre, code {
   font-size: calc(1.6rem * var(--cs)) !important;
   line-height: 1.4 !important;
 }
+
+/* ============================================================
+   7. SCENE ANIMATIONS — timed entry sequences for demo slides
+   ============================================================ */
+
+/* --- Fade up (default entry) --- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(calc(1.5rem * var(--cs))); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.anim-fade-up {
+  opacity: 0;
+  animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* --- Fade in (no movement) --- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.anim-fade-in {
+  opacity: 0;
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+/* --- Scale up from small --- */
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.anim-scale-up {
+  opacity: 0;
+  animation: scaleUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* --- Slide in from left --- */
+@keyframes slideLeft {
+  from { opacity: 0; transform: translateX(calc(-1.5rem * var(--cs))); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.anim-slide-left {
+  opacity: 0;
+  animation: slideLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* --- Glow pulse on cards --- */
+@keyframes glowPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+  50%  { box-shadow: 0 0 calc(1.5rem * var(--cs)) calc(0.25rem * var(--cs)) rgba(245, 158, 11, 0.15); }
+  100% { box-shadow: 0 0 calc(0.5rem * var(--cs)) 0 rgba(245, 158, 11, 0.05); }
+}
+
+.anim-glow {
+  animation: glowPulse 1.2s ease-out forwards;
+}
+
+/* --- Scale up + glow (combined — CSS animation shorthand conflicts if split) --- */
+.anim-scale-up-glow {
+  opacity: 0;
+  animation:
+    scaleUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+    glowPulse 1.2s ease-in-out 0.5s 1 forwards;
+}
+
+/* --- Delay utilities (use with any .anim-* class) --- */
+.d-0   { animation-delay: 0s !important; }
+.d-200 { animation-delay: 0.2s !important; }
+.d-400 { animation-delay: 0.4s !important; }
+.d-600 { animation-delay: 0.6s !important; }
+.d-800 { animation-delay: 0.8s !important; }
+.d-1000 { animation-delay: 1.0s !important; }
+.d-1200 { animation-delay: 1.2s !important; }
+.d-1500 { animation-delay: 1.5s !important; }
+.d-1800 { animation-delay: 1.8s !important; }
+.d-2000 { animation-delay: 2.0s !important; }
+.d-2500 { animation-delay: 2.5s !important; }
+.d-3000 { animation-delay: 3.0s !important; }
+.d-3500 { animation-delay: 3.5s !important; }
+.d-4000 { animation-delay: 4.0s !important; }
+.d-4500 { animation-delay: 4.5s !important; }
+.d-5000 { animation-delay: 5.0s !important; }
+
+/* --- Loading dots animation --- */
+@keyframes loadDots {
+  0%, 20% { content: '.'; }
+  40%     { content: '..'; }
+  60%, 100% { content: '...'; }
+}
+
+.loading-dots::after {
+  content: '';
+  animation: loadDots 1.2s step-end infinite;
+}

@@ -357,7 +357,7 @@ All render as full-bleed backgrounds. Use with `.layout-overlay` for text.
 
 | Component | What It Does | Key Props |
 |-----------|-------------|-----------|
-| `<BrowserFrame>` | macOS browser window for iframes | `url`, `title`, `darkChrome` |
+| `<BrowserFrame>` | macOS browser window for iframes | `url`, `title`, `darkChrome`, `width`, `height`, `zoom`, `align`, `top` |
 | `<ControlPanel>` | Live settings panel | (none) |
 
 ### Vue Components — Inspira UI (copy-paste library)
@@ -667,16 +667,17 @@ These are **starting points**, not a closed set. Layouts are infinite.
 
 ```html
 <div class="browser-frame-slide">
-  <BrowserFrame url="https://example.com" title="Site Name">
+  <BrowserFrame url="https://example.com" title="Site Name" width="66%" height="120%" :zoom="0.9" top="8%">
     <iframe
       src="https://example.com"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
       loading="lazy"
-      tabindex="-1"
     ></iframe>
   </BrowserFrame>
 </div>
 ```
+
+Props: `width` (default "100%"), `height` (default "100%"), `zoom` (Number, default 0.5 — CSS zoom on iframe), `align` ("center"/"left"/"right"), `top` (margin-top offset). Use `clicks: false` in frontmatter for interactive iframes.
 
 ### Custom Grid Layout
 
