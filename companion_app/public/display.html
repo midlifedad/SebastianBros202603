@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Wrong Rubric — Display</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="display-layout">
+    <!-- Left column: QR code + URL + counter -->
+    <div class="display-qr-section">
+      <h2 class="display-title" style="font-family:var(--font-heading); font-size:1.8rem; color:var(--text-primary); margin-bottom:var(--space-lg);">The Wrong Rubric</h2>
+      <div class="qr-card">
+        <canvas id="qr-canvas"></canvas>
+      </div>
+      <p id="qr-url" class="text-mono" style="color:var(--text-muted); margin-top:var(--space-md); word-break:break-all; max-width:400px; text-align:center;"></p>
+      <p id="checkin-counter" class="display-counter">0 of 21 checked in</p>
+    </div>
+    <!-- Right column: Check-in feed -->
+    <div class="display-feed-section">
+      <h3 class="display-feed-title">Check-Ins</h3>
+      <div id="checkin-feed" class="display-feed-grid"></div>
+    </div>
+  </div>
+
+  <script src="/vendor/qrcode.min.js"></script>
+  <script src="/js/shared/auth.js"></script>
+  <script src="/js/shared/ws-client.js"></script>
+  <script src="/js/display.js"></script>
+</body>
+</html>
