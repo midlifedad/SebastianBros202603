@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>The Wrong Rubric — Check In</title>
+  <link rel="preload" href="/fonts/plus-jakarta-sans-v8-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <header style="text-align:center; padding: 48px 0 24px;">
+      <h1 style="font-family: var(--font-heading); font-size: 2rem; color: var(--text-primary); margin-bottom: 4px;">The Wrong Rubric</h1>
+      <p style="color: var(--text-secondary); font-size: 0.9rem;">Check in to get your personalized guide</p>
+    </header>
+
+    <!-- Search state -->
+    <div id="search-view">
+      <div class="search-container">
+        <input type="text" id="name-input" class="search-input"
+               placeholder="Type your name..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      </div>
+      <ul id="suggestions" class="suggestions-list"></ul>
+    </div>
+
+    <!-- Confirmation state (hidden by default) -->
+    <div id="confirm-view" class="hidden">
+      <div class="confirm-card">
+        <img id="confirm-photo" class="profile-photo" src="" alt="Profile photo">
+        <h2 id="confirm-name" class="name"></h2>
+        <p id="confirm-title" class="title"></p>
+        <button id="checkin-btn" class="btn-primary">Check In</button>
+        <button id="back-btn" style="margin-top:12px; background:none; border:none; color:var(--text-muted); cursor:pointer; padding:8px; font-size:0.85rem;">Back to search</button>
+      </div>
+    </div>
+
+    <!-- Loading state -->
+    <div id="loading-view" class="loading hidden">
+      <p>Loading...</p>
+    </div>
+  </div>
+
+  <script src="/js/shared/auth.js"></script>
+  <script src="/js/shared/ws-client.js"></script>
+  <script src="/js/shared/utils.js"></script>
+  <script src="/vendor/fuse.min.js"></script>
+  <script src="/js/checkin.js"></script>
+</body>
+</html>

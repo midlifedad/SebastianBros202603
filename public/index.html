@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Wrong Rubric — Versions</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: #0a0a0f;
+    color: #f0ece4;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4rem 2rem;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 400;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    color: rgba(240, 236, 228, 0.4);
+    font-size: 0.85rem;
+    letter-spacing: 0.15rem;
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+  }
+
+  .versions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 640px;
+  }
+
+  .version-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(245, 158, 11, 0.12);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    transition: all 0.2s ease;
+  }
+
+  .version-card:hover {
+    background: rgba(245, 158, 11, 0.06);
+    border-color: rgba(245, 158, 11, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .version-card .name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+  }
+
+  .version-card .meta {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.75rem;
+    color: rgba(240, 236, 228, 0.35);
+    letter-spacing: 0.05rem;
+    text-transform: uppercase;
+  }
+
+  .version-card .meta .accent {
+    color: rgba(245, 158, 11, 0.6);
+  }
+
+  .section-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+
+  .section-pills span {
+    font-size: 0.65rem;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(245, 158, 11, 0.08);
+    color: rgba(240, 236, 228, 0.5);
+  }
+
+  .upload-area {
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 640px;
+    border: 2px dashed rgba(245, 158, 11, 0.15);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    color: rgba(240, 236, 228, 0.3);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .upload-area:hover {
+    border-color: rgba(245, 158, 11, 0.35);
+    color: rgba(240, 236, 228, 0.5);
+  }
+
+  .upload-area input { display: none; }
+
+  .empty { text-align: center; color: rgba(240, 236, 228, 0.3); padding: 2rem; }
+</style>
+</head>
+<body>
+
+<h1>The Wrong Rubric</h1>
+<p class="subtitle">Presentation Versions</p>
+
+<div class="versions" id="versions">
+  <div class="empty">Loading versions...</div>
+</div>
+
+<div class="upload-area" id="upload-area">
+  <input type="file" id="file-input" accept=".md" multiple>
+  Drop .md section files here or click to upload
+</div>
+
+<script>
+  async function loadVersions() {
+    try {
+      const res = await fetch('/versions.json');
+      const data = await res.json();
+      const container = document.getElementById('versions');
+
+      if (!data.versions || data.versions.length === 0) {
+        container.innerHTML = '<div class="empty">No versions found</div>';
+        return;
+      }
+
+      container.innerHTML = data.versions.map(v => `
+        <a href="/${v.id}/" class="version-card">
+          <div class="name">${v.name}</div>
+          <div class="meta">
+            <span class="accent">${v.date}</span>
+            <span>${v.sections.length} sections</span>
+          </div>
+          <div class="section-pills">
+            ${v.sections.map(s => `<span>${s}</span>`).join('')}
+          </div>
+        </a>
+      `).join('');
+    } catch (e) {
+      // In dev mode, versions.json may not be at root — show direct links
+      const container = document.getElementById('versions');
+      container.innerHTML = `
+        <a href="/versions/v1-draft/" class="version-card">
+          <div class="name">V1 — First Draft</div>
+          <div class="meta">
+            <span class="accent">2026-03-10</span>
+            <span>All sections</span>
+          </div>
+        </a>
+      `;
+    }
+  }
+
+  // File upload handling
+  const uploadArea = document.getElementById('upload-area');
+  const fileInput = document.getElementById('file-input');
+
+  uploadArea.addEventListener('click', () => fileInput.click());
+  uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.style.borderColor = 'rgba(245, 158, 11, 0.5)'; });
+  uploadArea.addEventListener('dragleave', () => { uploadArea.style.borderColor = 'rgba(245, 158, 11, 0.15)'; });
+  uploadArea.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadArea.style.borderColor = 'rgba(245, 158, 11, 0.15)';
+    handleFiles(e.dataTransfer.files);
+  });
+  fileInput.addEventListener('change', e => handleFiles(e.target.files));
+
+  function handleFiles(files) {
+    for (const file of files) {
+      if (!file.name.endsWith('.md')) continue;
+      const reader = new FileReader();
+      reader.onload = () => {
+        // Store uploaded section in localStorage for now
+        const key = `section:${file.name}`;
+        localStorage.setItem(key, reader.result);
+        uploadArea.innerHTML = `Uploaded: ${file.name} (${(reader.result.length / 1024).toFixed(1)}KB)<br><small style="color: rgba(245,158,11,0.5);">Stored locally. Add to a version entry file to include.</small>`;
+      };
+      reader.readAsText(file);
+    }
+  }
+
+  loadVersions();
+</script>
+
+</body>
+</html>

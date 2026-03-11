@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>The Wrong Rubric — Your Guide</title>
+  <link rel="preload" href="/fonts/plus-jakarta-sans-v8-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="app-container" style="padding-bottom: calc(60px + var(--safe-bottom));">
+
+    <!-- Loading state -->
+    <div id="loading-view" class="loading">
+      <p>Loading your guide...</p>
+    </div>
+
+    <!-- Guide content (hidden until data loads) -->
+    <div id="guide-view" class="hidden">
+      <!-- Welcome header -->
+      <header class="guide-header">
+        <img id="guide-photo" class="profile-photo" src="" alt="Profile photo">
+        <p class="welcome">Your AI Resource Guide</p>
+        <h1 id="guide-name" class="name"></h1>
+        <p id="guide-title" class="title" style="font-size:0.8rem; color:var(--text-secondary); max-width:300px; margin:0 auto;"></p>
+      </header>
+
+      <!-- Section tabs -->
+      <nav id="section-tabs" class="section-tabs" role="tablist"></nav>
+
+      <!-- Section content panels -->
+      <div id="section-content" class="section-content"></div>
+    </div>
+  </div>
+
+  <!-- Bottom tab bar -->
+  <nav class="tab-bar">
+    <div class="tab-bar-inner">
+      <a class="tab-item active" href="#">Guide</a>
+      <a id="tab-poll" class="tab-item" href="#">Poll</a>
+      <a class="tab-item disabled" href="#">Presentation</a>
+    </div>
+  </nav>
+
+  <script src="/js/shared/auth.js"></script>
+  <script src="/js/shared/utils.js"></script>
+  <script src="/js/guide.js"></script>
+</body>
+</html>

@@ -1,0 +1,888 @@
+/* ==========================================================================
+   The Wrong Rubric — Companion App Design System
+   Dark cinematic theme for mobile-first event experience
+   ========================================================================== */
+
+/* ==========================================================================
+   Section 1: @font-face Declarations
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/cormorant-garamond-v16-latin-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/cormorant-garamond-v16-latin-700.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/plus-jakarta-sans-v8-latin-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/plus-jakarta-sans-v8-latin-500.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/plus-jakarta-sans-v8-latin-600.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-v18-latin-regular.woff2') format('woff2');
+}
+
+/* ==========================================================================
+   Section 2: CSS Custom Properties
+   ========================================================================== */
+
+:root {
+  /* Colors */
+  --bg-primary: #0a0a0f;
+  --bg-card: #141419;
+  --bg-input: #1a1a22;
+  --border-subtle: #2a2a35;
+  --text-primary: #e8e6f0;
+  --text-secondary: #8a8698;
+  --text-muted: #5a5868;
+  --accent-amber: #f59e0b;
+  --accent-amber-dim: #b87a08;
+  --accent-amber-glow: rgba(245, 158, 11, 0.15);
+  --success-green: #22c55e;
+  --error-red: #ef4444;
+
+  /* Typography */
+  --font-heading: 'Cormorant Garamond', 'Georgia', serif;
+  --font-body: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+
+  /* Layout */
+  --max-width: 420px;
+  --touch-min: 48px;
+  --border-radius: 12px;
+  --border-radius-sm: 8px;
+
+  /* Safe area */
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ==========================================================================
+   Section 3: CSS Reset
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
+
+/* ==========================================================================
+   Section 4: Base Styles
+   ========================================================================== */
+
+body {
+  background-color: var(--bg-primary);
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
+
+.app-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+  min-height: 100dvh;
+  min-height: 100vh; /* fallback for older browsers */
+}
+
+/* ==========================================================================
+   Section 5: Typography
+   ========================================================================== */
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.3;
+}
+
+h1 { font-size: 2rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.25rem; }
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.text-mono {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+/* ==========================================================================
+   Section 6: Component Styles
+   ========================================================================== */
+
+/* --- 6a: Search Input --- */
+
+.search-container {
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--border-radius);
+  padding: 14px 16px;
+  font-size: 16px; /* prevents iOS zoom */
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  transition: border-color 0.15s;
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.search-input:focus {
+  border-color: var(--accent-amber);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-amber-glow);
+}
+
+/* --- 6b: Autocomplete Suggestions --- */
+
+.suggestions-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-sm) 0;
+}
+
+.suggestion-item {
+  min-height: var(--touch-min);
+  padding: var(--space-md);
+  background: var(--bg-card);
+  border-radius: var(--border-radius-sm);
+  margin-bottom: var(--space-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  transition: background 0.15s;
+  touch-action: manipulation;
+}
+
+.suggestion-item:active {
+  background: var(--bg-input);
+}
+
+.suggestion-item .name {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.suggestion-item .title {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.suggestion-item.checked-in {
+  opacity: 0.7;
+}
+
+.suggestion-item .checked-badge {
+  font-size: 0.7rem;
+  color: var(--success-green);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* --- 6c: Confirmation Card --- */
+
+.confirm-card {
+  background: var(--bg-card);
+  border-radius: var(--border-radius);
+  padding: var(--space-xl);
+  text-align: center;
+  animation: cardEnter 0.3s ease-out;
+}
+
+.confirm-card .profile-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--accent-amber);
+  margin-bottom: var(--space-md);
+}
+
+.confirm-card .name {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.confirm-card .title {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-lg);
+}
+
+/* --- 6d: Button --- */
+
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  background: var(--accent-amber);
+  color: #0a0a0f;
+  font-weight: 600;
+  font-size: 1rem;
+  font-family: var(--font-body);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  min-height: var(--touch-min);
+  touch-action: manipulation;
+  transition: background 0.15s;
+}
+
+.btn-primary:active {
+  background: var(--accent-amber-dim);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --- 6e: Guide Header --- */
+
+.guide-header {
+  text-align: center;
+  padding: var(--space-xl) 0;
+}
+
+.guide-header .profile-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--accent-amber);
+  margin-bottom: var(--space-md);
+}
+
+.guide-header .welcome {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  color: var(--text-secondary);
+}
+
+.guide-header .name {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+/* --- 6f: Section Tabs --- */
+
+.section-tabs {
+  display: flex;
+  overflow-x: auto;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--border-subtle);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.section-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-btn {
+  flex-shrink: 0;
+  padding: var(--space-sm) var(--space-md);
+  font-size: 0.8rem;
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  min-height: var(--touch-min);
+  touch-action: manipulation;
+  transition: color 0.15s, background 0.15s;
+}
+
+.tab-btn.active {
+  color: var(--accent-amber);
+  background: var(--accent-amber-glow);
+}
+
+/* --- 6g: Section Content (markdown rendered) --- */
+
+.section-content {
+  padding: var(--space-md) 0;
+  line-height: 1.7;
+}
+
+.section-content h3,
+.section-content h4,
+.section-content h5 {
+  font-family: var(--font-heading);
+  color: var(--accent-amber);
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-sm);
+}
+
+.section-content p {
+  margin-bottom: var(--space-md);
+  color: var(--text-primary);
+}
+
+.section-content ul,
+.section-content ol {
+  padding-left: var(--space-lg);
+  margin-bottom: var(--space-md);
+}
+
+.section-content li {
+  margin-bottom: var(--space-sm);
+  color: var(--text-primary);
+}
+
+.section-content a {
+  color: var(--accent-amber);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.section-content a:hover {
+  color: var(--accent-amber-dim);
+}
+
+.section-content strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* --- 6h: Bottom Tab Bar (guide page) --- */
+
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-subtle);
+  padding-bottom: calc(var(--space-sm) + var(--safe-bottom));
+}
+
+.tab-bar-inner {
+  display: flex;
+  width: 100%;
+  max-width: var(--max-width);
+  justify-content: space-around;
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-sm) 0;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  min-height: var(--touch-min);
+  justify-content: center;
+  touch-action: manipulation;
+  transition: color 0.15s;
+}
+
+.tab-item.active {
+  color: var(--accent-amber);
+}
+
+.tab-item.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* --- 6i: Loading and Error States --- */
+
+.loading {
+  text-align: center;
+  padding: var(--space-2xl);
+  color: var(--text-muted);
+}
+
+.error-msg {
+  text-align: center;
+  padding: var(--space-md);
+  color: var(--error-red);
+}
+
+.hidden {
+  display: none;
+}
+
+/* ==========================================================================
+   Section 7: Animations
+   ========================================================================== */
+
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ==========================================================================
+   Section 8: Utility Classes
+   ========================================================================== */
+
+.mt-sm { margin-top: var(--space-sm); }
+.mt-md { margin-top: var(--space-md); }
+.mt-lg { margin-top: var(--space-lg); }
+
+.mb-sm { margin-bottom: var(--space-sm); }
+.mb-md { margin-bottom: var(--space-md); }
+.mb-lg { margin-bottom: var(--space-lg); }
+
+/* ==========================================================================
+   Section 9: Display Page (Projector)
+   ========================================================================== */
+
+.display-layout {
+  display: grid;
+  grid-template-columns: 440px 1fr;
+  gap: var(--space-xl);
+  height: 100dvh;
+  height: 100vh; /* fallback */
+  padding: var(--space-xl);
+  overflow: hidden;
+  background: var(--bg-primary);
+}
+
+.display-qr-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-card {
+  background: #ffffff;
+  border-radius: var(--border-radius);
+  padding: var(--space-md);
+  display: inline-block;
+}
+
+.display-counter {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  color: var(--accent-amber);
+  margin-top: var(--space-lg);
+  letter-spacing: 0.05em;
+}
+
+.display-feed-section {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.display-feed-title {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-md);
+  flex-shrink: 0;
+}
+
+.display-feed-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-md);
+  overflow-y: auto;
+  scrollbar-width: none;
+  align-content: start;
+}
+
+.display-feed-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.display-checkin-card {
+  background: var(--bg-card);
+  border-radius: var(--border-radius-sm);
+  padding: var(--space-md);
+  text-align: center;
+}
+
+.display-card-photo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent-amber);
+  margin-bottom: var(--space-sm);
+}
+
+.display-card-name {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.display-card-title {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   Section 10: Presenter Page
+   ========================================================================== */
+
+.presenter-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+  height: 100dvh;
+  height: 100vh;
+  padding: var(--space-xl);
+  overflow: hidden;
+  background: var(--bg-primary);
+}
+
+.presenter-feed-section {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.presenter-feed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--space-md);
+  flex-shrink: 0;
+}
+
+.presenter-feed-list {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-subtle) transparent;
+}
+
+.presenter-checkin-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: var(--bg-card);
+  border-radius: var(--border-radius-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.presenter-poll-section {
+  overflow-y: auto;
+  padding-right: var(--space-sm);
+}
+
+.poll-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.poll-input {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--border-radius-sm);
+  padding: 12px 14px;
+  font-size: 15px;
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+  transition: border-color 0.15s;
+}
+
+.poll-input:focus {
+  border-color: var(--accent-amber);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-amber-glow);
+}
+
+.poll-input::placeholder {
+  color: var(--text-muted);
+}
+
+.poll-form-group {
+  margin-bottom: var(--space-md);
+}
+
+.poll-add-option-btn {
+  background: none;
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--border-radius-sm);
+  padding: var(--space-sm) var(--space-md);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  cursor: pointer;
+  width: 100%;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.poll-add-option-btn:hover {
+  border-color: var(--accent-amber);
+  color: var(--text-secondary);
+}
+
+.poll-active-question {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
+}
+
+.poll-bars-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.poll-bar-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.poll-bar-label {
+  flex: 0 0 120px;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  text-align: right;
+}
+
+.poll-bar-track {
+  flex: 1;
+  background: var(--bg-input);
+  border-radius: var(--border-radius-sm);
+  height: 32px;
+  overflow: hidden;
+}
+
+.poll-bar {
+  height: 100%;
+  background: var(--accent-amber);
+  border-radius: var(--border-radius-sm);
+  transition: width 0.3s ease-out;
+  min-width: 2px;
+}
+
+.poll-bar-count {
+  flex: 0 0 40px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent-amber);
+}
+
+.poll-close-btn {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  color: var(--error-red);
+  font-weight: 600;
+  font-size: 0.9rem;
+  font-family: var(--font-body);
+  border: 1px solid var(--error-red);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  margin-top: var(--space-xl);
+  min-height: var(--touch-min);
+  transition: background 0.15s;
+}
+
+.poll-close-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.poll-close-confirm-btn {
+  padding: 10px var(--space-lg);
+  background: var(--error-red);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  cursor: pointer;
+  margin-right: var(--space-sm);
+}
+
+.poll-cancel-btn {
+  padding: 10px var(--space-lg);
+  background: none;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  border-radius: var(--border-radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   Section 11: Poll Page (Attendee)
+   ========================================================================== */
+
+.poll-waiting {
+  text-align: center;
+  padding: var(--space-2xl) 0;
+}
+
+.poll-waiting-icon {
+  font-size: 2rem;
+  color: var(--accent-amber);
+  margin-bottom: var(--space-lg);
+}
+
+.poll-page-question {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  text-align: center;
+  padding: var(--space-xl) 0 var(--space-lg);
+}
+
+.poll-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.poll-option-card {
+  width: 100%;
+  padding: var(--space-lg);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--border-radius);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  min-height: var(--touch-min);
+  touch-action: manipulation;
+  transition: border-color 0.15s, background 0.15s;
+  text-align: left;
+}
+
+.poll-option-card:active {
+  background: var(--bg-input);
+}
+
+.poll-option-card.selected {
+  border-color: var(--accent-amber);
+  background: var(--accent-amber-glow);
+  color: var(--accent-amber);
+}
+
+.poll-option-card.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.poll-voted {
+  text-align: center;
+  padding: var(--space-2xl) 0;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.poll-voted-check {
+  font-size: 3rem;
+  color: var(--success-green);
+  margin-bottom: var(--space-md);
+}

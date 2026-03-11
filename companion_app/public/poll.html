@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>The Wrong Rubric — Poll</title>
+  <link rel="preload" href="/fonts/plus-jakarta-sans-v8-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="app-container" style="padding-bottom: calc(60px + var(--safe-bottom));">
+
+    <!-- Check-in required state -->
+    <div id="needs-checkin-view" class="hidden">
+      <div style="text-align:center; padding:var(--space-2xl) 0;">
+        <h2 style="font-family:var(--font-heading); color:var(--text-primary); margin-bottom:var(--space-md);">Check In First</h2>
+        <p style="color:var(--text-secondary); margin-bottom:var(--space-lg);">You need to check in before you can vote.</p>
+        <a id="checkin-link" class="btn-primary" style="display:inline-block; text-decoration:none; padding:14px 32px;">Go to Check-In</a>
+      </div>
+    </div>
+
+    <!-- Waiting for poll state -->
+    <div id="waiting-view" class="hidden">
+      <div class="poll-waiting">
+        <div class="poll-waiting-icon" style="animation: pulse 2s infinite;">&#9679;</div>
+        <h2 style="font-family:var(--font-heading); font-size:1.5rem; color:var(--text-primary); margin-bottom:var(--space-sm);">Waiting for the next poll...</h2>
+        <p style="color:var(--text-secondary); font-size:0.9rem;">The presenter will launch a poll shortly.</p>
+      </div>
+    </div>
+
+    <!-- Active poll voting state -->
+    <div id="poll-view" class="hidden">
+      <h2 id="poll-question" class="poll-page-question"></h2>
+      <div id="poll-options" class="poll-options-list"></div>
+    </div>
+
+    <!-- Vote confirmation state -->
+    <div id="voted-view" class="hidden">
+      <div class="poll-voted">
+        <div class="poll-voted-check">&#10003;</div>
+        <h2 style="font-family:var(--font-heading); font-size:1.5rem; color:var(--text-primary); margin-bottom:var(--space-sm);">Vote Recorded!</h2>
+        <p id="voted-option-text" style="color:var(--text-secondary); font-size:0.9rem;"></p>
+      </div>
+    </div>
+
+    <!-- Poll results state (after poll:closed) -->
+    <div id="results-view" class="hidden">
+      <h2 id="results-question" class="poll-page-question"></h2>
+      <div id="results-bars" class="poll-bars-container"></div>
+      <p id="results-total" class="text-secondary" style="margin-top:var(--space-md); text-align:center; font-size:0.85rem;"></p>
+    </div>
+
+  </div>
+
+  <!-- Bottom tab bar -->
+  <nav class="tab-bar">
+    <div class="tab-bar-inner">
+      <a id="tab-guide" class="tab-item" href="#">Guide</a>
+      <a class="tab-item active" href="#">Poll</a>
+      <a class="tab-item disabled" href="#">Presentation</a>
+    </div>
+  </nav>
+
+  <script src="/js/shared/auth.js"></script>
+  <script src="/js/shared/ws-client.js"></script>
+  <script src="/js/poll.js"></script>
+</body>
+</html>
