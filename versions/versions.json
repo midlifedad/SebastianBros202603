@@ -1,0 +1,21 @@
+{
+  "versions": [
+    {
+      "id": "v1-draft",
+      "name": "V1 — First Draft",
+      "date": "2026-03-10",
+      "sections": [
+        "00-intro",
+        "01-a-new-medium",
+        "02-cover",
+        "03-exponential-arc",
+        "04-iframe-demos",
+        "05-closing",
+        "90-samples",
+        "91-new-slides",
+        "99-control-panel"
+      ],
+      "file": "v1-draft.md"
+    }
+  ]
+}
