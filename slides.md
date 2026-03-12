@@ -16,11 +16,11 @@ fonts:
   serif: Playfair Display
   mono: JetBrains Mono
 clicks: 1
-src: ./sections/00-intro.md
+src: ./sections/00-checkin.md
 ---
 
 ---
-src: ./sections/01-a-new-medium.md
+src: ./sections/00-intro.md
 ---
 
 ---
@@ -28,23 +28,31 @@ src: ./sections/02-cover.md
 ---
 
 ---
-src: ./sections/03-exponential-arc.md
+src: ./sections/01-a-new-medium.md
 ---
 
 ---
-src: ./sections/04-iframe-demos.md
+src: ./sections/10-exponential-arc.md
 ---
 
 ---
-src: ./sections/05-closing.md
+src: ./sections/20-price-collapse.md
 ---
 
 ---
-src: ./sections/90-samples.md
+src: ./sections/30-principles.md
 ---
 
 ---
-src: ./sections/91-new-slides.md
+src: ./sections/40-whole-life.md
+---
+
+---
+src: ./sections/50-the-owl.md
+---
+
+---
+src: ./sections/60-the-choice.md
 ---
 
 ---
