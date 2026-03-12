@@ -178,6 +178,27 @@ app.post('/api/admin/poll/close', adminOnly, (req, res) => {
   res.json({ results });
 });
 
+app.post('/api/admin/reset', adminOnly, (req, res) => {
+  state.checkedIn.clear();
+  state.activePoll = null;
+  state.pollResults = [];
+  broadcast({
+    type: 'state:sync',
+    checkedIn: [],
+    activePoll: null,
+    checkedInCount: 0,
+    totalAttendees: state.attendees.size,
+  });
+  res.json({ success: true, message: 'All check-ins and polls reset' });
+});
+
+app.get('/api/admin/not-checked-in', adminOnly, (req, res) => {
+  const notCheckedIn = Array.from(state.attendees.values())
+    .filter(a => !state.checkedIn.has(a.id))
+    .map(a => ({ id: a.id, name: a.name, title: a.title }));
+  res.json(notCheckedIn);
+});
+
 app.get('/api/admin/state', adminOnly, (req, res) => {
   res.json({
     checkedIn: Array.from(state.checkedIn.values()),

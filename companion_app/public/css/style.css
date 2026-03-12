@@ -553,6 +553,8 @@ h3 { font-size: 1.25rem; }
   padding: var(--space-sm);
   display: inline-block;
   box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+  pointer-events: auto;
 }
 
 .display-counter {
@@ -564,6 +566,8 @@ h3 { font-size: 1.25rem; }
   background: var(--bg-primary);
   padding: var(--space-xs) var(--space-md);
   border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  pointer-events: auto;
 }
 
 .display-feed-wrap {

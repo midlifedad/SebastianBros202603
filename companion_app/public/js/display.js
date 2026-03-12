@@ -43,6 +43,34 @@
       }
     );
 
+    // --- QR click to reset ---
+    document.getElementById('qr-canvas').addEventListener('click', async function () {
+      if (!confirm('Reset all check-ins?')) return;
+      try {
+        var res = await auth.apiFetch('/api/admin/reset', { method: 'POST' });
+        if (!res.ok) alert('Reset failed');
+      } catch (e) {
+        alert('Reset failed: ' + e.message);
+      }
+    });
+
+    // --- Counter click to show not-checked-in list ---
+    document.getElementById('checkin-counter').addEventListener('click', async function () {
+      try {
+        var res = await auth.apiFetch('/api/admin/not-checked-in');
+        if (!res.ok) return;
+        var list = await res.json();
+        if (list.length === 0) {
+          alert('Everyone has checked in!');
+          return;
+        }
+        var names = list.map(function (a) { return a.name; }).join('\n');
+        alert('Not yet checked in (' + list.length + '):\n\n' + names);
+      } catch (e) {
+        console.error('Error fetching not-checked-in:', e);
+      }
+    });
+
     // --- State sync handler ---
     wsClient.on('state:sync', function (msg) {
       checkedInCount = msg.checkedInCount || 0;
