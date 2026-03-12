@@ -44,14 +44,20 @@
     );
 
     // --- QR click to reset ---
-    document.getElementById('qr-canvas').addEventListener('click', async function () {
-      if (!confirm('Reset all check-ins?')) return;
-      try {
-        var res = await auth.apiFetch('/api/admin/reset', { method: 'POST' });
-        if (!res.ok) alert('Reset failed');
-      } catch (e) {
-        alert('Reset failed: ' + e.message);
-      }
+    document.getElementById('qr-canvas').addEventListener('click', function () {
+      showModal(
+        'Reset Check-Ins',
+        '<p class="modal-text">Clear all check-ins and start fresh?</p>',
+        'Reset',
+        async function () {
+          try {
+            var res = await auth.apiFetch('/api/admin/reset', { method: 'POST' });
+            if (!res.ok) showModal('Error', '<p class="modal-text">Reset failed.</p>');
+          } catch (e) {
+            showModal('Error', '<p class="modal-text">Reset failed: ' + e.message + '</p>');
+          }
+        }
+      );
     });
 
     // --- Counter click to show not-checked-in list ---
@@ -61,11 +67,15 @@
         if (!res.ok) return;
         var list = await res.json();
         if (list.length === 0) {
-          alert('Everyone has checked in!');
+          showModal('All Here!', '<p class="modal-text">Everyone has checked in.</p>');
           return;
         }
-        var names = list.map(function (a) { return a.name; }).join('\n');
-        alert('Not yet checked in (' + list.length + '):\n\n' + names);
+        var html = '<ul class="modal-list">';
+        list.forEach(function (a) {
+          html += '<li>' + a.name + '</li>';
+        });
+        html += '</ul>';
+        showModal('Not Yet Checked In (' + list.length + ')', html);
       } catch (e) {
         console.error('Error fetching not-checked-in:', e);
       }
@@ -152,6 +162,66 @@
     } catch (e) {
       console.warn('Wake Lock not available:', e.message);
     }
+  }
+
+  // --- Modal ---
+  function showModal(title, bodyHtml, confirmLabel, onConfirm) {
+    // Remove any existing modal
+    var existing = document.getElementById('display-modal');
+    if (existing) existing.remove();
+
+    var overlay = document.createElement('div');
+    overlay.id = 'display-modal';
+    overlay.className = 'modal-overlay';
+
+    var dialog = document.createElement('div');
+    dialog.className = 'modal-dialog';
+
+    var h = document.createElement('h3');
+    h.className = 'modal-title';
+    h.textContent = title;
+    dialog.appendChild(h);
+
+    var body = document.createElement('div');
+    body.className = 'modal-body';
+    body.innerHTML = bodyHtml;
+    dialog.appendChild(body);
+
+    var actions = document.createElement('div');
+    actions.className = 'modal-actions';
+
+    if (onConfirm) {
+      var cancelBtn = document.createElement('button');
+      cancelBtn.className = 'modal-btn modal-btn-cancel';
+      cancelBtn.textContent = 'Cancel';
+      cancelBtn.addEventListener('click', function () { overlay.remove(); });
+      actions.appendChild(cancelBtn);
+
+      var confirmBtn = document.createElement('button');
+      confirmBtn.className = 'modal-btn modal-btn-confirm';
+      confirmBtn.textContent = confirmLabel || 'OK';
+      confirmBtn.addEventListener('click', function () {
+        overlay.remove();
+        onConfirm();
+      });
+      actions.appendChild(confirmBtn);
+    } else {
+      var closeBtn = document.createElement('button');
+      closeBtn.className = 'modal-btn modal-btn-confirm';
+      closeBtn.textContent = 'OK';
+      closeBtn.addEventListener('click', function () { overlay.remove(); });
+      actions.appendChild(closeBtn);
+    }
+
+    dialog.appendChild(actions);
+    overlay.appendChild(dialog);
+
+    // Close on overlay click
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) overlay.remove();
+    });
+
+    document.body.appendChild(overlay);
   }
 
   // --- Start ---
