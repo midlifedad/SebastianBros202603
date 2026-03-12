@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Velocity of Assimilation</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,700&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0a0a0f;
+            --text-main: #f0ece4;
+            --text-muted: #8a8698;
+            --tv-color: #5b8c85;
+            --web-color: #d99a5a;
+            --ai-color: #c94c4c;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            overflow: hidden;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .title-block {
+            position: absolute;
+            top: 6vh;
+            left: 5vw;
+            z-index: 10;
+            opacity: 0;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.2rem;
+            font-weight: 400;
+            margin: 0 0 0.4rem 0;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+        }
+
+        .subtitle {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 300;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        #presentation-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 4vh;
+        }
+
+        .timeline-row {
+            position: relative;
+            height: 180px;
+            width: 100vw;
+            opacity: 0;
+        }
+
+        .timeline-label {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.6rem;
+            font-style: italic;
+            font-weight: 500;
+            position: absolute;
+            left: 5vw;
+            top: 65px;
+            width: 5vw;
+            color: var(--text-muted);
+        }
+
+        .scale-stage {
+            position: absolute;
+            left: 10vw;
+            width: 85vw;
+            height: 100%;
+        }
+
+        /* --- BULLETPROOF ALIGNMENT CSS --- */
+        .line {
+            position: absolute;
+            top: 80px;
+            height: 2px;
+            width: 0%;
+            background-color: #333;
+        }
+
+        .tv-row .line { background-color: var(--tv-color); }
+        .web-row .line { background-color: var(--web-color); }
+        .ai-row .line { background-color: var(--ai-color); }
+
+        .milestone {
+            position: absolute;
+            top: 80px;
+            width: 0;
+            opacity: 0;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            position: absolute;
+            top: -3px;
+            left: -4px;
+        }
+
+        .tv-row .dot { background-color: var(--tv-color); }
+        .web-row .dot { background-color: var(--web-color); }
+        .ai-row .dot { background-color: var(--ai-color); }
+
+        .marker-line {
+            position: absolute;
+            width: 1px;
+            background-color: #444;
+            left: -0.5px;
+        }
+
+        .text-content {
+            position: absolute;
+            text-align: center;
+            white-space: nowrap;
+            transform: translateX(-50%);
+        }
+
+        .year {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-bottom: 2px;
+        }
+
+        .desc {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        /* --- UP/DOWN MILESTONE POSITIONING --- */
+        .milestone.down .marker-line {
+            top: 5px;
+            height: 40px;
+        }
+
+        .milestone.down .text-content {
+            top: 50px;
+        }
+
+        .milestone.up .marker-line {
+            bottom: 5px;
+            height: 40px;
+        }
+
+        .milestone.up .text-content {
+            bottom: 50px;
+        }
+
+        /* --- TIMELINE POSITIONS (1920 to 2030 Span) --- */
+        .tv-1926 { left: 5.45%; }
+        .tv-1936 { left: 14.54%; }
+        .tv-1948 { left: 25.45%; }
+        .tv-1954 { left: 30.90%; }
+        .tv-1972 { left: 47.27%; }
+        .tv-2010 { left: 81.81%; }
+        .tv-2020 { left: 90.90%; }
+
+        .web-1991 { left: 64.54%; }
+        .web-2004 { left: 76.36%; }
+        .web-2007 { left: 79.09%; }
+        .web-2020 { left: 90.90%; }
+
+        .ai-2020 { left: 90.90%; }
+        .ai-2022 { left: 93.45%; }
+        .ai-2023 { left: 93.81%; }
+        .ai-2024 { left: 94.90%; }
+        .ai-2025 { left: 96.18%; }
+        .ai-2026 { left: 96.36%; }
+
+        /* --- PRE-ZOOM: COMPRESS AI TIMELINE --- */
+        .ai-row .text-content {
+            font-size: 0px;
+            opacity: 0;
+            transition: all 1s ease;
+        }
+
+        .ai-row .milestone.down .marker-line,
+        .ai-row .milestone.up .marker-line {
+            height: 8px;
+            transition: height 1s ease;
+        }
+
+        .ai-row .milestone.down .text-content {
+            top: 15px;
+            transition: top 1s ease;
+        }
+
+        .ai-row .milestone.up .text-content {
+            bottom: 15px;
+            transition: bottom 1s ease;
+        }
+
+        /* --- POST-ZOOM: REVEAL AI TIMELINE --- */
+        .zoomed .ai-row .text-content {
+            opacity: 1;
+            font-size: 0.7rem;
+        }
+
+        .zoomed .ai-row .year {
+            font-size: 0.8rem;
+        }
+
+        .zoomed .ai-row .milestone.down .marker-line,
+        .zoomed .ai-row .milestone.up .marker-line {
+            height: 40px;
+        }
+
+        .zoomed .ai-row .milestone.down .text-content {
+            top: 50px;
+        }
+
+        .zoomed .ai-row .milestone.up .text-content {
+            bottom: 50px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="title-block">
+        <h1>The Velocity of Assimilation</h1>
+        <div class="subtitle">How fast each medium reshaped society</div>
+    </div>
+
+    <div id="presentation-container">
+
+        <div class="timeline-row tv-row">
+            <div class="timeline-label">TV</div>
+            <div class="scale-stage">
+                <div class="line tv-line" style="left: 5.45%;"></div>
+
+                <div class="milestone down tv-1926">
+                    <div class="dot"></div>
+                    <div class="marker-line"></div>
+                    <div class="text-content">
+                        <div class="year">1926</div>
+                        <div class="desc">First Live Demo</div>
+                    </div>
+                </div>
+                <div class="milestone up tv-1936">
+                    <div class="text-content">
+                        <div class="year">1936</div>
+                        <div class="desc">BBC Service</div>
+                    </div>
+                    <div class="marker-line"></div>
+                    <div class="dot"></div>
+                </div>
+                <div class="milestone down tv-1948">
+                    <div class="dot"></div>
+                    <div class="marker-line"></div>
+                    <div class="text-content">
+                        <div class="year">1948</div>
+                        <div class="desc">Golden Age</div>
+                    </div>
+                </div>
+                <div class="milestone up tv-1954">
+                    <div class="text-content">
+                        <div class="year">1954</div>
+                        <div class="desc">Color Broadcast</div>
+                    </div>
+                    <div class="marker-line"></div>
+                    <div class="dot"></div>
+                </div>
+                <div class="milestone down tv-1972">
+                    <div class="dot"></div>
+                    <div class="marker-line"></div>
+                    <div class="text-content">
+                        <div class="year">1972</div>
+                        <div class="desc">Cable (HBO)</div>
+                    </div>
+                </div>
+                <div class="milestone up tv-2010">
+                    <div class="text-content">
+                        <div class="year">2010</div>
+                        <div class="desc">Streaming</div>
+                    </div>
+                    <div class="marker-line"></div>
+                    <div class="dot"></div>
+                </div>
+                <div class="milestone down tv-2020">
+                    <div class="dot"></div>
+                    <div class="marker-line"></div>
+                    <div class="text-content">
+                        <div class="year">2020+</div>
+                        <div class="desc">Mobile TV</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-row web-row">
+            <div class="timeline-label">Web</div>
+            <div class="scale-stage">
+                <div class="line web-line" style="left: 64.54%;"></div>
+
+                <div class="milestone down web-1991">
+                    <div class="dot"></div>
+                    <div class="marker-line"></div>
+                    <div class="text-content">
+                        <div class="year">1991</div>
+                        <div class="desc">Web 1.0 (Static)</div>
+                    </div>
+                </div>
+                <div class="milestone up web-2004">
+                    <div class="text-content">
+                        <div class="year">2004</div>
+                        <div class="desc">Web 2.0 (Social)</div>
+                    </div>
+                    <div class="marker-line"></div>
+                    <div class="dot"></div>
+                </div>
+                <div class="milestone down web-2007">
+                    <div class="dot"></div>
+                    <div class="marker-line"></div>
+                    <div class="text-content">
+                        <div class="year">2007</div>
+                        <div class="desc">Mobile Web</div>
+                    </div>
+                </div>
+                <div class="milestone up web-2020">
+                    <div class="text-content">
+                        <div class="year">2020+</div>
+                        <div class="desc">Web 3.0</div>
+                    </div>
+                    <div class="marker-line"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-row ai-row">
+            <div class="timeline-label">AI</div>
+            <div class="scale-stage">
+                <div class="line ai-line" style="left: 90.90%;"></div>
+
+                <div class="milestone down ai-2020">
+                    <div class="dot"></div>
+                    <div class="marker-line"></div>
+                    <div class="text-content">
+                        <div class="year">2020</div>
+                        <div class="desc">LLMs</div>
+                    </div>
+                </div>
+                <div class="milestone up ai-2022">
+                    <div class="text-content">
+                        <div class="year">Nov '22</div>
+                        <div class="desc">Chatbots</div>
+                    </div>
+                    <div class="marker-line"></div>
+                    <div class="dot"></div>
+                </div>
+                <div class="milestone down ai-2023">
+                    <div class="dot"></div>
+                    <div class="marker-line"></div>
+                    <div class="text-content">
+                        <div class="year">Mar '23</div>
+                        <div class="desc">Reasoning</div>
+                    </div>
+                </div>
+                <div class="milestone up ai-2024">
+                    <div class="text-content">
+                        <div class="year">May '24</div>
+                        <div class="desc">Multimodal</div>
+                    </div>
+                    <div class="marker-line"></div>
+                    <div class="dot"></div>
+                </div>
+                <div class="milestone down ai-2025">
+                    <div class="dot"></div>
+                    <div class="marker-line"></div>
+                    <div class="text-content">
+                        <div class="year">Nov '25</div>
+                        <div class="desc">System 2</div>
+                    </div>
+                </div>
+                <div class="milestone up ai-2026">
+                    <div class="text-content">
+                        <div class="year">2026</div>
+                        <div class="desc">Agents</div>
+                    </div>
+                    <div class="marker-line"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let step = 0;
+        const totalSteps = 4;
+
+        gsap.defaults({ ease: "power2.out", duration: 1 });
+
+        // Build GSAP timelines for each step so we can reverse them
+        const timelines = [];
+
+        // Step 0 → 1: Title + TV row
+        const tl0 = gsap.timeline({ paused: true });
+        tl0.to('.title-block', { opacity: 1, duration: 0.6 })
+           .to('.tv-row', { opacity: 1, duration: 0.5 }, 0.2)
+           .to('.tv-line', { width: '85.45%', duration: 1.5, ease: "power1.inOut" }, 0.2)
+           .to('.tv-row .milestone', { opacity: 1, stagger: 0.12 }, 0.7);
+        timelines.push(tl0);
+
+        // Step 1 → 2: Web row
+        const tl1 = gsap.timeline({ paused: true });
+        tl1.to('.web-row', { opacity: 1, duration: 0.5 })
+           .to('.web-line', { width: '26.36%', duration: 1, ease: "power1.inOut" }, 0)
+           .to('.web-row .milestone', { opacity: 1, stagger: 0.15 }, 0.4);
+        timelines.push(tl1);
+
+        // Step 2 → 3: AI row (macro)
+        const tl2 = gsap.timeline({ paused: true });
+        tl2.to('.ai-row', { opacity: 1, duration: 0.5 })
+           .to('.ai-line', { width: '5.46%', duration: 0.8, ease: "power1.inOut" }, 0)
+           .to('.ai-row .milestone', { opacity: 1, stagger: 0.08 }, 0.4);
+        timelines.push(tl2);
+
+        // Step 3 → 4: Zoom into AI
+        const tl3 = gsap.timeline({ paused: true });
+        tl3.to(['.tv-row', '.web-row'], { opacity: 0.12, duration: 1 })
+           .to('.title-block', { opacity: 0, duration: 0.6 }, 0)
+           .to('.scale-stage', {
+               width: '1400%',
+               left: '-1264%',
+               duration: 2.5,
+               ease: "power3.inOut"
+           }, 0)
+           .add(() => document.body.classList.add('zoomed'), 0.5);
+        timelines.push(tl3);
+
+        function releaseFocus() {
+            window.frameElement && window.frameElement.blur();
+            window.parent.focus();
+        }
+
+        function forward() {
+            if (step >= totalSteps) { releaseFocus(); return; }
+            timelines[step].play();
+            step++;
+        }
+
+        function backward() {
+            if (step <= 0) { releaseFocus(); return; }
+            step--;
+            if (step === 3) document.body.classList.remove('zoomed');
+            timelines[step].reverse();
+        }
+
+        function reset() {
+            timelines.forEach(tl => tl.progress(0).pause());
+            step = 0;
+            document.body.classList.remove('zoomed');
+            gsap.set('.timeline-row', { opacity: 0 });
+            gsap.set('.title-block', { opacity: 0 });
+            gsap.set('.tv-line', { width: '0%' });
+            gsap.set('.web-line', { width: '0%' });
+            gsap.set('.ai-line', { width: '0%' });
+            gsap.set('.scale-stage', { width: '85vw', left: '10vw' });
+            gsap.set('.milestone', { opacity: 0 });
+        }
+
+        // Listen for reset command from parent slide
+        window.addEventListener('message', (e) => {
+            if (e.data === 'reset') reset();
+        });
+
+        // Click = forward, right-click = back
+        document.body.addEventListener('click', (e) => {
+            if (e.button === 2) { backward(); return; }
+            forward();
+        });
+        document.body.addEventListener('contextmenu', (e) => e.preventDefault());
+
+        // Keyboard: Right/Space = forward, Left = back
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                forward();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                backward();
+            }
+        });
+    </script>
+</body>
+
+</html>

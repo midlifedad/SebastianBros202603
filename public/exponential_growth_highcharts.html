@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exponential Growth of Computing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400&family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/11.4.0/highcharts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/11.4.0/highcharts-more.js"></script>
+    <style>
+        :root {
+            --color-bg: #0a0a0f;
+            --color-bg-soft: #12121a;
+            --color-surface: #22222e;
+            --color-text: #f0ece4;
+            --color-text-muted: #8a8698;
+            --color-text-dim: #5a5668;
+            --color-accent: #f59e0b;
+            --font-display: 'Playfair Display', serif;
+            --font-editorial: 'Cormorant Garamond', serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-bg);
+            font-family: var(--font-body);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chart-container {
+            width: 90vw;
+            max-width: 1400px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .headers {
+            margin-bottom: 8px;
+            padding-left: 95px;
+        }
+
+        .main-title {
+            color: var(--color-text);
+            font-family: var(--font-display);
+            font-size: 3rem;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: -0.01em;
+        }
+
+        .sub-title {
+            color: var(--color-text-muted);
+            font-family: var(--font-editorial);
+            font-size: 1.5rem;
+            font-weight: 400;
+            font-style: italic;
+            margin: 4px 0 0 0;
+        }
+
+        #container {
+            flex: 1;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="chart-container">
+        <div class="headers">
+            <h1 class="main-title">Exponential Growth of Computing</h1>
+            <h2 class="sub-title">Twentieth through twenty-first century</h2>
+        </div>
+        <div id="container"></div>
+    </div>
+
+    <script>
+        // Trend Line Formula (center of band):
+        // log₁₀(CPS/$1K) = 6.00 × (3.4 ^ ((Year − 1900) / 100)) − 11.00
+        function getInterpolatedValue(year) {
+            return 6.00 * Math.pow(3.4, (year - 1900) / 100.0) - 11.00;
+        }
+
+        const rawData = [
+            { "year": 1900, "log10_cps": -5.235, "device": "Analytical Engine" },
+            { "year": 1908, "log10_cps": -3.886, "device": "Hollerith Tabulator" },
+            { "year": 1911, "log10_cps": -4.237, "device": "Monroe Calculator" },
+            { "year": 1919, "log10_cps": -2.973, "device": "IBM Tabulator" },
+            { "year": 1928, "log10_cps": -3.155, "device": "National Ellis 3000" },
+            { "year": 1939, "log10_cps": -2.068, "device": "Zuse 2" },
+            { "year": 1940, "log10_cps": -0.844, "device": "Bell Calculator Model 1" },
+            { "year": 1941, "log10_cps": -1.334, "device": "Zuse 3" },
+            { "year": 1943, "log10_cps": 0.725, "device": "Colossus" },
+            { "year": 1946, "log10_cps": -0.098, "device": "ENIAC" },
+            { "year": 1948, "log10_cps": -0.432, "device": "IBM SSEC" },
+            { "year": 1949, "log10_cps": 0.019, "device": "EDSAC" },
+            { "year": 1949, "log10_cps": 0.264, "device": "BINAC" },
+            { "year": 1951, "log10_cps": 0.155, "device": "Univac 1" },
+            { "year": 1953, "log10_cps": 0.786, "device": "Univac 1103" },
+            { "year": 1953, "log10_cps": 1.076, "device": "IBM 701" },
+            { "year": 1954, "log10_cps": -0.436, "device": "EDVAC" },
+            { "year": 1955, "log10_cps": 0.536, "device": "IBM 704" },
+            { "year": 1955, "log10_cps": 1.216, "device": "Whirlwind" },
+            { "year": 1958, "log10_cps": -0.487, "device": "Datamatic 1000" },
+            { "year": 1958, "log10_cps": -0.039, "device": "Univac II" },
+            { "year": 1960, "log10_cps": 0.18, "device": "IBM 1620" },
+            { "year": 1960, "log10_cps": 2.18, "device": "DEC PDP-1" },
+            { "year": 1961, "log10_cps": 2.451, "device": "DEC PDP-4" },
+            { "year": 1962, "log10_cps": 1.469, "device": "Univac III" },
+            { "year": 1964, "log10_cps": 2.2, "device": "CDC 6600" },
+            { "year": 1965, "log10_cps": 2.684, "device": "IBM 1130" },
+            { "year": 1965, "log10_cps": 3.253, "device": "DEC PDP-8" },
+            { "year": 1966, "log10_cps": 1.696, "device": "IBM 360 Model 75" },
+            { "year": 1968, "log10_cps": 2.33, "device": "DEC PDP-10" },
+            { "year": 1973, "log10_cps": 2.862, "device": "Intellec-8" },
+            { "year": 1973, "log10_cps": 3.532, "device": "Data General Nova" },
+            { "year": 1975, "log10_cps": 4.024, "device": "Altair 8800" },
+            { "year": 1976, "log10_cps": 2.89, "device": "DEC PDP-11 Model 70" },
+            { "year": 1977, "log10_cps": 3.571, "device": "Cray 1" },
+            { "year": 1977, "log10_cps": 4.429, "device": "Apple II" },
+            { "year": 1979, "log10_cps": 3.047, "device": "DEC VAX 11 Model 780" },
+            { "year": 1980, "log10_cps": 3.75, "device": "Sun-1" },
+            { "year": 1982, "log10_cps": 5.102, "device": "IBM PC" },
+            { "year": 1982, "log10_cps": 5.102, "device": "Compaq Portable" },
+            { "year": 1983, "log10_cps": 4.936, "device": "IBM AT-80286" },
+            { "year": 1984, "log10_cps": 4.93, "device": "Apple Macintosh" },
+            { "year": 1986, "log10_cps": 5.731, "device": "Compaq Deskpro 386" },
+            { "year": 1987, "log10_cps": 5.367, "device": "Apple Mac II" },
+            { "year": 1993, "log10_cps": 6.55, "device": "Pentium PC" },
+            { "year": 1996, "log10_cps": 7.682, "device": "Pentium PC" },
+            { "year": 1998, "log10_cps": 8.125, "device": "Pentium II PC" },
+            { "year": 1999, "log10_cps": 8.847, "device": "Pentium III PC" },
+            { "year": 2000, "log10_cps": 8.531, "device": "Power Macintosh G4/500" },
+            { "year": 2000, "log10_cps": 9.037, "device": "IBM ASCI White" },
+            { "year": 2000, "log10_cps": 9.194, "device": "KLAT2 Beowulf Cluster" },
+            { "year": 2003, "log10_cps": 9.316, "device": "Power Macintosh G5 2.0" },
+            { "year": 2003, "log10_cps": 10.104, "device": "KASY0 Cluster" },
+            { "year": 2004, "log10_cps": 9.543, "device": "Dell Dimension 8400" },
+            { "year": 2005, "log10_cps": 9.803, "device": "Power Mac G5 Quad" },
+            { "year": 2007, "log10_cps": 10.107, "device": "Microwulf Cluster" },
+            { "year": 2008, "log10_cps": 10.316, "device": "Mac Pro (2008)" },
+            { "year": 2008, "log10_cps": 10.544, "device": "Dell XPS 630" },
+            { "year": 2009, "log10_cps": 10.212, "device": "Intel Core i7 Desktop" },
+            { "year": 2010, "log10_cps": 10.726, "device": "Intel Core i7 Desktop (2010)" },
+            { "year": 2011, "log10_cps": 11.861, "device": "HPU4Science Cluster" },
+            { "year": 2012, "log10_cps": 12.25, "device": "Quad AMD Radeon HD 7970" },
+            { "year": 2013, "log10_cps": 12.795, "device": "Sony PlayStation 4" },
+            { "year": 2013, "log10_cps": 13.039, "device": "Radeon R9 290 System" },
+            { "year": 2014, "log10_cps": 13.096, "device": "NVIDIA GTX 980" },
+            { "year": 2015, "log10_cps": 13.354, "device": "Radeon R9 295X2 System" },
+            { "year": 2016, "log10_cps": 13.315, "device": "NVIDIA GTX 1080" },
+            { "year": 2017, "log10_cps": 13.25, "device": "NVIDIA Tesla V100" },
+            { "year": 2017, "log10_cps": 13.857, "device": "AMD RX Vega 64" },
+            { "year": 2018, "log10_cps": 14.117, "device": "NVIDIA RTX 2080 Ti" },
+            { "year": 2020, "log10_cps": 13.491, "device": "PlayStation 5" },
+            { "year": 2020, "log10_cps": 14.486, "device": "NVIDIA RTX 3080" },
+            { "year": 2022, "log10_cps": 12.673, "device": "Apple M2 MacBook Pro" },
+            { "year": 2022, "log10_cps": 15.147, "device": "NVIDIA RTX 4090" },
+            { "year": 2023, "log10_cps": 14.398, "device": "NVIDIA H100 SXM" },
+            { "year": 2024, "log10_cps": 13.19, "device": "Apple M4 Max MacBook Pro" },
+            { "year": 2024, "log10_cps": 14.612, "device": "NVIDIA B200" },
+            { "year": 2025, "log10_cps": 13.768, "device": "Apple M5 Max MacBook Pro" },
+            { "year": 2025, "log10_cps": 14.783, "device": "AMD Radeon RX 9070 XT" },
+            { "year": 2025, "log10_cps": 15.194, "device": "NVIDIA RTX 5090" }
+        ];
+
+        const scatterDataPre2000 = rawData.filter(d => d.year <= 2000).map(item => ({
+            x: item.year,
+            y: item.log10_cps,
+            name: item.device
+        }));
+
+        const scatterDataPost2000 = Object.values(
+            rawData.filter(d => d.year > 2000)
+                .reduce((acc, curr) => {
+                    if (!acc[curr.year] || curr.log10_cps > acc[curr.year].log10_cps) {
+                        acc[curr.year] = curr;
+                    }
+                    return acc;
+                }, {})
+        ).map(item => ({
+            x: item.year,
+            y: item.log10_cps,
+            name: item.device
+        }));
+
+        const bandData = [];
+        for (let year = 1900; year <= 2100; year += 2.0) {
+            const centerVal = getInterpolatedValue(year);
+            const halfHeight = 1.25;
+            bandData.push({
+                x: Math.round(year * 10) / 10,
+                low: centerVal - halfHeight,
+                high: centerVal + halfHeight
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const chart = Highcharts.chart('container', {
+                chart: {
+                    backgroundColor: 'transparent',
+                    marginTop: 30,
+                    marginRight: 20,
+                    style: {
+                        fontFamily: "'Plus Jakarta Sans', sans-serif"
+                    }
+                },
+                title: { text: null },
+                credits: { enabled: false },
+                legend: { enabled: false },
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: 'rgba(10, 10, 15, 0.92)',
+                    borderColor: 'rgba(245, 158, 11, 0.3)',
+                    borderRadius: 6,
+                    style: {
+                        color: '#f0ece4',
+                        fontFamily: "'Plus Jakarta Sans', sans-serif",
+                        fontSize: '1rem'
+                    },
+                    formatter: function () {
+                        if (this.series.type === 'scatter') {
+                            return '<b style="font-family: \'Playfair Display\', serif; font-size: 1.15rem;">' + this.point.name + '</b><br/>' +
+                                '<span style="font-family: \'JetBrains Mono\', monospace; color: #8a8698;">' + this.point.x + '</span><br/>' +
+                                '<span style="color: #f59e0b;">10<sup>' + this.point.y.toFixed(1) + '</sup> CPS/$1K</span>';
+                        }
+                        return false;
+                    },
+                    useHTML: true
+                },
+
+                plotOptions: {
+                    series: { animation: { duration: 800 } },
+                    scatter: {
+                        marker: {
+                            symbol: 'circle',
+                            radius: 5,
+                            lineWidth: 1,
+                            lineColor: 'rgba(10, 10, 15, 0.6)',
+                            fillColor: '#f59e0b'
+                        },
+                        enableMouseTracking: true
+                    },
+                    columnrange: {
+                        color: 'rgba(245, 158, 11, 0.15)',
+                        borderWidth: 0,
+                        pointRange: 2.0,
+                        pointPadding: 0.1,
+                        groupPadding: 0,
+                        enableMouseTracking: false
+                    }
+                },
+
+                xAxis: {
+                    min: 1900,
+                    max: 2100,
+                    tickInterval: 20,
+                    title: {
+                        text: 'Year',
+                        style: {
+                            color: '#8a8698',
+                            fontFamily: "'Cormorant Garamond', serif",
+                            fontSize: '1.8rem',
+                            fontStyle: 'italic'
+                        },
+                        margin: 18
+                    },
+                    labels: {
+                        style: {
+                            color: '#5a5668',
+                            fontFamily: "'JetBrains Mono', monospace",
+                            fontSize: '0.85rem'
+                        }
+                    },
+                    tickLength: 6,
+                    tickWidth: 1,
+                    tickColor: '#5a5668',
+                    lineColor: '#5a5668',
+                    lineWidth: 1,
+                    gridLineColor: 'rgba(90, 86, 104, 0.08)'
+                },
+
+                yAxis: {
+                    min: -10,
+                    max: 45,
+                    tickInterval: 5,
+                    gridLineColor: 'rgba(90, 86, 104, 0.08)',
+                    title: {
+                        text: 'Calculations per Second per $1,000',
+                        style: {
+                            color: '#8a8698',
+                            fontFamily: "'Cormorant Garamond', serif",
+                            fontSize: '1.8rem',
+                            fontStyle: 'italic'
+                        },
+                        margin: 30
+                    },
+                    labels: {
+                        style: {
+                            color: '#5a5668',
+                            fontFamily: "'JetBrains Mono', monospace",
+                            fontSize: '0.85rem'
+                        },
+                        formatter: function () {
+                            if (this.value === 0) return '1';
+                            return '10<sup style="font-size: 0.75rem">' + this.value + '</sup>';
+                        },
+                        useHTML: true,
+                        align: 'right',
+                        x: -15
+                    },
+                    tickLength: 6,
+                    tickWidth: 1,
+                    tickPosition: 'outside',
+                    tickColor: '#5a5668',
+                    lineColor: '#5a5668',
+                    lineWidth: 1,
+                    plotBands: [{
+                        from: -10,
+                        to: 45,
+                        color: {
+                            linearGradient: { x1: 0, y1: 1, x2: 0, y2: 0 },
+                            stops: [
+                                [0, '#0f0f18'],
+                                [0.5, '#141420'],
+                                [1, '#1a1a28']
+                            ]
+                        },
+                        zIndex: 0
+                    }],
+                    plotLines: []
+                },
+
+                series: [{
+                    type: 'columnrange',
+                    id: 'trendline',
+                    name: 'Prediction Band',
+                    data: bandData,
+                    zIndex: 1,
+                    visible: false,
+                    showInLegend: false,
+                    tooltip: {
+                        pointFormatter: function () {
+                            return '<br/>Trend Band: 10^' + this.low.toFixed(2) + ' to 10^' + this.high.toFixed(2);
+                        }
+                    }
+                }, {
+                    type: 'scatter',
+                    id: 'scatterPre2000',
+                    data: scatterDataPre2000,
+                    zIndex: 10,
+                    visible: false,
+                    showInLegend: false
+                }, {
+                    type: 'scatter',
+                    id: 'scatterPost2000',
+                    data: scatterDataPost2000,
+                    zIndex: 10,
+                    visible: false,
+                    showInLegend: false,
+                    marker: {
+                        fillColor: '#ef4444',
+                        lineColor: 'rgba(10, 10, 15, 0.6)',
+                        lineWidth: 1
+                    }
+                }]
+            });
+
+            let currentStep = 0;
+            const yAxis = chart.yAxis[0];
+
+            document.body.addEventListener('click', function (e) {
+                if (e.target.tagName.toLowerCase() === 'a' || e.target.closest('.highcharts-tooltip')) return;
+
+                currentStep++;
+
+                const addAnimatedLine = (id, val, textStr) => {
+                    yAxis.addPlotLine({
+                        id: id,
+                        value: val,
+                        color: 'rgba(245, 158, 11, 0.5)',
+                        width: 1,
+                        dashStyle: 'Dash',
+                        zIndex: 5,
+                        label: {
+                            text: textStr,
+                            align: 'right',
+                            style: {
+                                fontFamily: "'Cormorant Garamond', serif",
+                                fontStyle: 'italic',
+                                fontWeight: '400',
+                                fontSize: '2rem',
+                                color: '#f0ece4'
+                            },
+                            y: -6,
+                            x: -10
+                        }
+                    });
+                };
+
+                switch (currentStep) {
+                    case 1:
+                        chart.get('scatterPre2000').setVisible(true, true);
+                        break;
+                    case 2:
+                        chart.get('trendline').setVisible(true, true);
+                        break;
+                    case 3:
+                        addAnimatedLine('line1', 8, 'One Insect Brain');
+                        break;
+                    case 4:
+                        addAnimatedLine('line2', 11, 'One Mouse Brain');
+                        break;
+                    case 5:
+                        addAnimatedLine('line3', 16, 'One Human Brain');
+                        break;
+                    case 6:
+                        addAnimatedLine('line4', 26, 'All Human Brains');
+                        break;
+                    case 7:
+                        chart.get('scatterPost2000').setVisible(true, true);
+                        break;
+                    case 8:
+                        chart.xAxis[0].addPlotLine({
+                            id: 'marker2016',
+                            value: 2016,
+                            color: 'rgba(245, 158, 11, 0.7)',
+                            width: 2,
+                            zIndex: 15,
+                            label: {
+                                text: '2016',
+                                align: 'center',
+                                rotation: 0,
+                                y: -8,
+                                style: {
+                                    fontFamily: "'JetBrains Mono', monospace",
+                                    fontSize: '1.2rem',
+                                    fontWeight: '400',
+                                    color: '#f59e0b'
+                                }
+                            }
+                        });
+                        break;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

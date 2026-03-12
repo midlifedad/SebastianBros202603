@@ -4,6 +4,7 @@
   "description": "The Wrong Rubric — Amir Haque, FinMa Family Reunion, Whistler BC, March 2026",
   "scripts": {
     "dev": "slidev slides.md --port 3030 --open",
+    "dev:multi": "node dev-server.js",
     "dev:v1": "slidev versions/v1-draft.md --port 3030 --open",
     "build": "bash build.sh",
     "build:single": "slidev build",
@@ -15,6 +16,8 @@
     "@slidev/cli": "^52.14.1",
     "@slidev/theme-default": "^0.25.0",
     "@slidev/theme-seriph": "^0.25.0",
-    "three": "^0.183.2"
+    "cobe": "^0.6.5",
+    "three": "^0.183.2",
+    "three-globe": "^2.45.0"
   }
 }

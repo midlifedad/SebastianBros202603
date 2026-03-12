@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onUnmounted, onMounted } from 'vue'
+import { ref, watch, onUnmounted, onMounted, onDeactivated } from 'vue'
 
 const props = defineProps({
   src: { type: String, default: '/video.mp4' },
@@ -76,6 +76,14 @@ onUnmounted(() => {
 })
 
 onUnmounted(() => {
+  if (videoRef.value) {
+    videoRef.value.pause()
+    videoRef.value.currentTime = 0
+  }
+})
+
+// Slidev keeps slides alive — onDeactivated fires when navigating away
+onDeactivated(() => {
   if (videoRef.value) {
     videoRef.value.pause()
     videoRef.value.currentTime = 0
