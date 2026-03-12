@@ -18,7 +18,7 @@ if (!EVENT_TOKEN || !ADMIN_TOKEN) {
 const app = express();
 app.use(express.json());
 app.set('trust proxy', 1);
-app.use(helmet());
+app.use(helmet({ frameguard: false, contentSecurityPolicy: false }));
 app.use(compression());
 app.use(express.static(path.join(__dirname, 'public')));
 
