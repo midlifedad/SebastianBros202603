@@ -119,8 +119,9 @@ const utils = (() => {
    * @returns {string} — URL path to image
    */
   function getProfileImage(attendee) {
+    if (attendee.pixar_image) return '/images/pixar/' + attendee.pixar_image;
     if (attendee.image) return '/images/' + attendee.image;
-    return '/images/pixar/' + attendee.pixar_image;
+    return '/images/pixar/default.jpg';
   }
 
   return { createFuzzySearch, renderMarkdown, getProfileImage };
