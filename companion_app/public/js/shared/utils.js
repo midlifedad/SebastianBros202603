@@ -48,6 +48,12 @@ const utils = (() => {
   function renderMarkdown(text) {
     if (!text) return '';
 
+    // Pre-process: if text has no paragraph breaks but has semicolon-separated items,
+    // split them into separate lines for proper rendering
+    if (text.indexOf('\n\n') === -1 && (text.match(/;/g) || []).length >= 2) {
+      text = text.replace(/;\s+/g, '\n\n');
+    }
+
     // Escape HTML entities first (prevent XSS)
     let html = text
       .replace(/&/g, '&amp;')

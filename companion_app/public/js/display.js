@@ -37,12 +37,11 @@
     QRCode.toCanvas(
       document.getElementById('qr-canvas'),
       attendeeUrl,
-      { width: 400, margin: 2, color: { dark: '#000000', light: '#ffffff' }, errorCorrectionLevel: 'H' },
+      { width: 280, margin: 2, color: { dark: '#000000', light: '#ffffff' }, errorCorrectionLevel: 'H' },
       function (err) {
         if (err) console.error('QR render error:', err);
       }
     );
-    document.getElementById('qr-url').textContent = attendeeUrl;
 
     // --- State sync handler ---
     wsClient.on('state:sync', function (msg) {
