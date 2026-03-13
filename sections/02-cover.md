@@ -11,7 +11,7 @@ clicks: false
     FinMa Family Reunion · Whistler BC · March 2026
   </p>
   <h1 class="t-display" style="line-height: 1.1;">
-    <span class="accent-gradient">The Wrong Rubric</span>
+    <span class="accent-gradient">Going Exponential</span>
   </h1>
   <p class="t-body t--muted mt-lg">Amir Haque</p>
 </div>

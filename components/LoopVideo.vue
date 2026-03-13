@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onActivated, onDeactivated, onMounted } from 'vue'
+import { ref, onActivated, onDeactivated, onMounted, nextTick } from 'vue'
 
 const props = defineProps({
   src: { type: String, required: true },
@@ -21,7 +21,9 @@ function stop() {
   }
 }
 
-onMounted(stop)
+onMounted(() => {
+  nextTick(play)
+})
 onActivated(play)
 onDeactivated(stop)
 </script>

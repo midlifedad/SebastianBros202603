@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sketch &rarr; Color — Coloring Book Generator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #0c0c10;
+    color: #e4e4e7;
+    min-height: 100vh;
+  }
+
+  .app {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+    gap: 0;
+  }
+
+  /* Left panel - upload/sketch area */
+  .left-panel {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .app-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .app-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #ec4899, #f43f5e);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .title-text { font-size: 18px; font-weight: 700; letter-spacing: -0.4px; }
+  .title-sub { font-size: 11px; color: rgba(255,255,255,0.35); }
+
+  .btn {
+    padding: 8px 16px; border-radius: 8px; font-size: 13px;
+    font-weight: 500; border: none; cursor: pointer; font-family: inherit;
+  }
+
+  .btn-pink { background: #ec4899; color: #fff; }
+  .btn-ghost { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.08); }
+
+  /* Sketch canvas area */
+  .sketch-area {
+    flex: 1;
+    background: rgba(255,255,255,0.02);
+    border: 2px dashed rgba(255,255,255,0.08);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .sketch-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Fake child's drawing */
+  .child-sketch {
+    width: 80%;
+    height: 80%;
+    position: relative;
+  }
+
+  .sketch-stroke {
+    position: absolute;
+    fill: none;
+    stroke: rgba(255,255,255,0.5);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* SVG cat sketch */
+  .cat-svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .sketch-label {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Caveat', cursive;
+    font-size: 22px;
+    color: rgba(255,255,255,0.3);
+  }
+
+  .upload-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(236,72,153,0.12);
+    color: #ec4899;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .control-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(255,255,255,0.3);
+  }
+
+  .control-select {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #e4e4e7;
+    font-family: inherit;
+    appearance: none;
+    cursor: pointer;
+    min-width: 120px;
+  }
+
+  .slider-group {
+    flex: 1;
+  }
+
+  .slider-track {
+    width: 100%;
+    height: 4px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    position: relative;
+  }
+
+  .slider-fill {
+    width: 65%;
+    height: 100%;
+    background: linear-gradient(90deg, #ec4899, #f43f5e);
+    border-radius: 2px;
+  }
+
+  .slider-thumb {
+    position: absolute;
+    top: 50%;
+    left: 65%;
+    transform: translate(-50%, -50%);
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #ec4899;
+    border: 2px solid #0c0c10;
+    box-shadow: 0 0 8px rgba(236,72,153,0.4);
+  }
+
+  /* Right panel - output pages */
+  .right-panel {
+    padding: 32px;
+    background: #0e0e13;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .output-title {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+  }
+
+  .page-nav {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .page-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.06);
+    border: none;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  /* Coloring page output */
+  .coloring-page {
+    flex: 1;
+    background: #ffffff;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .coloring-svg {
+    width: 75%;
+    height: 75%;
+  }
+
+  .page-footer {
+    text-align: center;
+    font-family: 'Caveat', cursive;
+    font-size: 18px;
+    color: rgba(0,0,0,0.2);
+    position: absolute;
+    bottom: 24px;
+  }
+
+  /* Page grid */
+  .page-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  .page-thumb {
+    aspect-ratio: 0.77;
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .page-thumb:hover { transform: scale(1.05); }
+  .page-thumb.active { outline: 2px solid #ec4899; outline-offset: 2px; }
+
+  .page-thumb svg {
+    width: 60%;
+    height: 60%;
+  }
+
+  .page-number {
+    position: absolute;
+    bottom: 4px;
+    right: 6px;
+    font-size: 9px;
+    color: rgba(0,0,0,0.2);
+  }
+
+  .generate-bar {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="left-panel">
+    <div class="app-header">
+      <div class="app-title">
+        <div class="app-icon">&#10024;</div>
+        <div>
+          <div class="title-text">Sketch &rarr; Color</div>
+          <div class="title-sub">Coloring Book Generator</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost">&#128247; Camera</button>
+    </div>
+
+    <div class="sketch-area">
+      <div class="upload-badge">Original Sketch</div>
+      <div class="sketch-content">
+        <svg class="cat-svg" viewBox="0 0 300 300">
+          <!-- Child-like cat drawing -->
+          <ellipse cx="150" cy="175" rx="55" ry="65" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Head -->
+          <circle cx="150" cy="100" r="40" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2.5"/>
+          <!-- Ears -->
+          <path d="M120 70 L110 35 L135 60" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M180 70 L190 35 L165 60" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2.5" stroke-linejoin="round"/>
+          <!-- Eyes -->
+          <circle cx="135" cy="95" r="6" fill="rgba(255,255,255,0.3)"/>
+          <circle cx="165" cy="95" r="6" fill="rgba(255,255,255,0.3)"/>
+          <circle cx="136" cy="93" r="2.5" fill="rgba(255,255,255,0.6)"/>
+          <circle cx="166" cy="93" r="2.5" fill="rgba(255,255,255,0.6)"/>
+          <!-- Nose + mouth -->
+          <path d="M147 107 L150 110 L153 107" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M150 110 L150 114" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
+          <path d="M145 115 Q150 120 155 115" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- Whiskers -->
+          <line x1="120" y1="105" x2="95" y2="100" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+          <line x1="120" y1="110" x2="93" y2="112" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+          <line x1="180" y1="105" x2="205" y2="100" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+          <line x1="180" y1="110" x2="207" y2="112" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+          <!-- Legs (wobbly) -->
+          <path d="M115 225 L110 260" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M140 228 L137 262" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M160 228 L163 262" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M185 225 L190 260" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Tail -->
+          <path d="M205 170 Q230 140 220 110 Q215 95 225 85" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Stars (child decorations) -->
+          <text x="60" y="80" font-size="14" fill="rgba(255,255,255,0.15)">&#10026;</text>
+          <text x="230" y="160" font-size="12" fill="rgba(255,255,255,0.12)">&#10026;</text>
+          <text x="80" y="200" font-size="10" fill="rgba(255,255,255,0.1)">&#9829;</text>
+        </svg>
+      </div>
+      <div class="sketch-label">Mia's drawing &mdash; "Princess Whiskers"</div>
+    </div>
+
+    <div class="controls">
+      <div class="control-group">
+        <span class="control-label">Style</span>
+        <select class="control-select">
+          <option>Classic Outline</option>
+          <option>Detailed</option>
+          <option>Simple / Toddler</option>
+          <option>Storybook</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <span class="control-label">Pages</span>
+        <select class="control-select">
+          <option>8 pages</option>
+          <option>4 pages</option>
+          <option>12 pages</option>
+          <option>16 pages</option>
+        </select>
+      </div>
+      <div class="control-group slider-group">
+        <span class="control-label">Detail Level</span>
+        <div class="slider-track">
+          <div class="slider-fill"></div>
+          <div class="slider-thumb"></div>
+        </div>
+      </div>
+      <button class="btn btn-pink" style="align-self: flex-end;">Generate</button>
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <div class="output-header">
+      <div class="output-title">Coloring Pages</div>
+      <div class="page-nav">
+        <button class="page-btn">&#8249;</button>
+        Page 1 of 8
+        <button class="page-btn">&#8250;</button>
+      </div>
+    </div>
+
+    <div class="coloring-page">
+      <svg class="coloring-svg" viewBox="0 0 300 300">
+        <!-- Clean coloring-book style cat -->
+        <!-- Body -->
+        <ellipse cx="150" cy="178" rx="58" ry="62" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+        <!-- Head -->
+        <circle cx="150" cy="100" r="44" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+        <!-- Ears with inner ear detail -->
+        <path d="M116 68 L105 28 L138 58" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M120 64 L112 38 L134 58" fill="none" stroke="#1a1a1a" stroke-width="1"/>
+        <path d="M184 68 L195 28 L162 58" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M180 64 L188 38 L166 58" fill="none" stroke="#1a1a1a" stroke-width="1"/>
+        <!-- Eyes with pupils -->
+        <ellipse cx="132" cy="95" rx="10" ry="11" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
+        <circle cx="134" cy="93" r="4" fill="#1a1a1a"/>
+        <circle cx="135.5" cy="91.5" r="1.5" fill="#fff"/>
+        <ellipse cx="168" cy="95" rx="10" ry="11" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
+        <circle cx="166" cy="93" r="4" fill="#1a1a1a"/>
+        <circle cx="167.5" cy="91.5" r="1.5" fill="#fff"/>
+        <!-- Nose -->
+        <path d="M146 110 L150 115 L154 110 Z" fill="#1a1a1a"/>
+        <!-- Mouth -->
+        <path d="M150 115 V118" stroke="#1a1a1a" stroke-width="1.2"/>
+        <path d="M143 120 Q150 126 157 120" fill="none" stroke="#1a1a1a" stroke-width="1.2"/>
+        <!-- Whiskers -->
+        <line x1="118" y1="108" x2="85" y2="102" stroke="#1a1a1a" stroke-width="1"/>
+        <line x1="117" y1="114" x2="83" y2="116" stroke="#1a1a1a" stroke-width="1"/>
+        <line x1="118" y1="120" x2="86" y2="128" stroke="#1a1a1a" stroke-width="1"/>
+        <line x1="182" y1="108" x2="215" y2="102" stroke="#1a1a1a" stroke-width="1"/>
+        <line x1="183" y1="114" x2="217" y2="116" stroke="#1a1a1a" stroke-width="1"/>
+        <line x1="182" y1="120" x2="214" y2="128" stroke="#1a1a1a" stroke-width="1"/>
+        <!-- Paws -->
+        <ellipse cx="112" cy="248" rx="14" ry="10" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
+        <ellipse cx="142" cy="250" rx="14" ry="10" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
+        <ellipse cx="158" cy="250" rx="14" ry="10" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
+        <ellipse cx="188" cy="248" rx="14" ry="10" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
+        <!-- Legs -->
+        <line x1="112" y1="228" x2="112" y2="240" stroke="#1a1a1a" stroke-width="1.5"/>
+        <line x1="142" y1="232" x2="142" y2="242" stroke="#1a1a1a" stroke-width="1.5"/>
+        <line x1="158" y1="232" x2="158" y2="242" stroke="#1a1a1a" stroke-width="1.5"/>
+        <line x1="188" y1="228" x2="188" y2="240" stroke="#1a1a1a" stroke-width="1.5"/>
+        <!-- Tail -->
+        <path d="M208 172 C235 145 230 110 222 90 C218 80 225 70 232 65" fill="none" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"/>
+        <!-- Collar -->
+        <path d="M118 132 Q150 145 182 132" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
+        <circle cx="150" cy="140" r="5" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
+        <!-- Crown (princess detail) -->
+        <path d="M128 58 L132 48 L140 55 L150 42 L160 55 L168 48 L172 58" fill="none" stroke="#1a1a1a" stroke-width="1.2"/>
+        <circle cx="150" cy="42" r="2" fill="none" stroke="#1a1a1a" stroke-width="1"/>
+        <!-- Decorative stars -->
+        <text x="55" y="75" font-size="18" fill="none" stroke="#1a1a1a" stroke-width="0.8">&#10026;</text>
+        <text x="235" y="165" font-size="14" fill="none" stroke="#1a1a1a" stroke-width="0.8">&#10026;</text>
+        <text x="70" y="210" font-size="12" fill="none" stroke="#1a1a1a" stroke-width="0.8">&#9829;</text>
+        <text x="225" y="225" font-size="12" fill="none" stroke="#1a1a1a" stroke-width="0.8">&#9829;</text>
+      </svg>
+      <div class="page-footer">Princess Whiskers &mdash; Page 1</div>
+    </div>
+
+    <div class="page-grid">
+      <div class="page-thumb active">
+        <svg viewBox="0 0 60 60"><circle cx="30" cy="24" r="10" fill="none" stroke="#999" stroke-width="1"/><ellipse cx="30" cy="40" rx="12" ry="14" fill="none" stroke="#999" stroke-width="1"/></svg>
+        <span class="page-number">1</span>
+      </div>
+      <div class="page-thumb">
+        <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="16" fill="none" stroke="#ccc" stroke-width="1"/><circle cx="24" cy="26" r="2" fill="#ccc"/><circle cx="36" cy="26" r="2" fill="#ccc"/></svg>
+        <span class="page-number">2</span>
+      </div>
+      <div class="page-thumb">
+        <svg viewBox="0 0 60 60"><rect x="12" y="15" width="36" height="30" rx="4" fill="none" stroke="#ccc" stroke-width="1"/><path d="M20 30 L30 20 L40 30" fill="none" stroke="#ccc" stroke-width="1"/></svg>
+        <span class="page-number">3</span>
+      </div>
+      <div class="page-thumb">
+        <svg viewBox="0 0 60 60"><ellipse cx="30" cy="35" rx="18" ry="15" fill="none" stroke="#ccc" stroke-width="1"/><circle cx="30" cy="20" r="8" fill="none" stroke="#ccc" stroke-width="1"/></svg>
+        <span class="page-number">4</span>
+      </div>
+      <div class="page-thumb">
+        <svg viewBox="0 0 60 60"><path d="M15 40 Q30 10 45 40" fill="none" stroke="#ccc" stroke-width="1"/><circle cx="30" cy="25" r="3" fill="#ccc"/></svg>
+        <span class="page-number">5</span>
+      </div>
+      <div class="page-thumb">
+        <svg viewBox="0 0 60 60"><path d="M20 45 L30 15 L40 45 Z" fill="none" stroke="#ccc" stroke-width="1"/></svg>
+        <span class="page-number">6</span>
+      </div>
+      <div class="page-thumb">
+        <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="12" fill="none" stroke="#ccc" stroke-width="1"/><path d="M24 30 L28 34 L36 26" fill="none" stroke="#ccc" stroke-width="1.5"/></svg>
+        <span class="page-number">7</span>
+      </div>
+      <div class="page-thumb">
+        <svg viewBox="0 0 60 60"><text x="18" y="38" font-size="20" fill="none" stroke="#ccc" stroke-width="0.8">fin</text></svg>
+        <span class="page-number">8</span>
+      </div>
+    </div>
+
+    <div class="generate-bar">
+      <button class="btn btn-ghost" style="flex: 1;">&#128424; Print All</button>
+      <button class="btn btn-ghost" style="flex: 1;">&#128228; Export PDF</button>
+      <button class="btn btn-pink" style="flex: 1;">&#10024; Regenerate</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

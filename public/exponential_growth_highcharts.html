@@ -240,7 +240,7 @@
                 },
 
                 plotOptions: {
-                    series: { animation: { duration: 800 } },
+                    series: { animation: false },
                     scatter: {
                         marker: {
                             symbol: 'circle',
@@ -410,10 +410,12 @@
 
                 switch (currentStep) {
                     case 1:
-                        chart.get('scatterPre2000').setVisible(true, true);
+                        chart.get('scatterPre2000').setVisible(true, false);
+                        chart.redraw(false);
                         break;
                     case 2:
-                        chart.get('trendline').setVisible(true, true);
+                        chart.get('trendline').setVisible(true, false);
+                        chart.redraw(false);
                         break;
                     case 3:
                         addAnimatedLine('line1', 8, 'One Insect Brain');
@@ -428,7 +430,8 @@
                         addAnimatedLine('line4', 26, 'All Human Brains');
                         break;
                     case 7:
-                        chart.get('scatterPost2000').setVisible(true, true);
+                        chart.get('scatterPost2000').setVisible(true, false);
+                        chart.redraw(false);
                         break;
                     case 8:
                         chart.xAxis[0].addPlotLine({

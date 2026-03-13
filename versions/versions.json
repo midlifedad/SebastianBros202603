@@ -16,6 +16,15 @@
         "99-control-panel"
       ],
       "file": "v1-draft.md"
+    },
+    {
+      "id": "altv",
+      "name": "AltV",
+      "date": "2026-03-11",
+      "sections": [
+        "slides"
+      ],
+      "file": "altv.md"
     }
   ]
 }

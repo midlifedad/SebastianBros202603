@@ -15,12 +15,13 @@ fonts:
   sans: Inter
   serif: Playfair Display
   mono: JetBrains Mono
-clicks: 1
-src: ./sections/00-checkin.md
+clicks: false
 ---
 
+<div style="position: absolute; inset: 0; background: #000;"></div>
+
 ---
-src: ./sections/00-intro.md
+src: ./sections/intro.md
 ---
 
 ---
@@ -28,31 +29,27 @@ src: ./sections/02-cover.md
 ---
 
 ---
-src: ./sections/01-a-new-medium.md
+src: ./sections/principle-one.md
 ---
 
 ---
-src: ./sections/10-exponential-arc.md
+src: ./sections/principle-two.md
 ---
 
 ---
-src: ./sections/20-price-collapse.md
+src: ./sections/projects.md
+---
+
+---
+src: ./sections/cost-to-zero.md
+---
+
+---
+src: ./sections/end.md
 ---
 
 ---
 src: ./sections/30-principles.md
----
-
----
-src: ./sections/40-whole-life.md
----
-
----
-src: ./sections/50-the-owl.md
----
-
----
-src: ./sections/60-the-choice.md
 ---
 
 ---

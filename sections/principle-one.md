@@ -1,25 +1,4 @@
 ---
-# IMPORTANT: clicks: 1 is required here so $clicks >= 1 works in the CrtTv component.
-# Without it, Slidev skips this slide entirely (no click allocated for the video trigger).
-clicks: 1
----
-
-<!-- SLIDE 1 — Retro Video Intro -->
-
-<div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #000;">
-  <CrtTv src="/intro.mp4" :active="$clicks >= 1" :muted="false" :zoomDuration="45" titleText="Steve Jobs — 1985" :titleDelay="500" :titleHold="2000" />
-</div>
-
----
-transition: fade
-clicks: false
----
-
-<!-- SLIDE — Velocity of Assimilation (interactive timeline, resets on slide entry) -->
-
-<GraphFrame />
-
----
 transition: fade
 clicks: 1
 ---
@@ -50,6 +29,27 @@ clicks: 2
 <!-- SLIDE — Linear vs Exponential -->
 
 <LinearVsExponential :runLinear="$clicks >= 1" :runExp="$clicks >= 2" />
+
+---
+transition: fade
+clicks: 1
+---
+
+<!-- SLIDE — 26x around the Earth (looping video background) -->
+
+<div style="position: absolute; inset: 0; overflow: hidden; background: #000;">
+  <video
+    autoplay
+    loop
+    muted
+    playsinline
+    style="width: 100%; height: 100%; object-fit: cover;"
+    src="/26x-earth.mp4"
+  ></video>
+  <div v-click="1" v-motion :initial="{ opacity: 0, scale: 0.95 }" :enter="{ opacity: 1, scale: 1, transition: { duration: 800 } }" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;">
+    <span style="font-family: var(--font-display, 'Playfair Display', serif); font-size: calc(4rem * var(--cs)); font-weight: 600; color: #fff; text-shadow: 0 2px 40px rgba(0,0,0,0.6);">26× around the Earth</span>
+  </div>
+</div>
 
 ---
 transition: fade
@@ -85,48 +85,50 @@ clicks: 2
 
 ---
 transition: fade
-clicks: 5
+clicks: 6
 ---
 
 <!-- SLIDE — Midjourney V3–V7 Evolution -->
 
 <div style="position: absolute; inset: 0; background: var(--color-bg, #0a0a0f); display: flex; flex-direction: column; justify-content: center; padding: calc(2rem * var(--cs)) calc(2rem * var(--cs));">
 
+<div v-click="1" v-motion :initial="{ opacity: 0 }" :enter="{ opacity: 1, transition: { duration: 600 } }" style="position: absolute; top: calc(1.5rem * var(--cs)); left: 0; right: 0; text-align: center;">
+  <span style="font-family: var(--font-editorial, 'Cormorant Garamond', serif); font-size: calc(1.6rem * var(--cs)); font-style: italic; color: var(--color-text, #f0ece4);">"Detailed photograph of a white man in his 40s wearing a striped cowboy hat.<br> The man has a smirk on his face."</span>
+</div>
+
 <div style="display: flex; gap: calc(0.4rem * var(--cs)); align-items: flex-start; width: 100%;">
 
-<div v-click="1" v-motion :initial="{ opacity: 0, scale: 0.95 }" :enter="{ opacity: 1, scale: 1, transition: { duration: 500 } }" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: calc(0.4rem * var(--cs));">
+<div v-click="2" v-motion :initial="{ opacity: 0, scale: 0.95 }" :enter="{ opacity: 1, scale: 1, transition: { duration: 500 } }" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: calc(0.4rem * var(--cs));">
   <div style="width: 100%; aspect-ratio: 1; border-radius: calc(0.2rem * var(--cs)); overflow: hidden; background: var(--color-surface, #22222e);"><img src="/v3.png" style="width: 100%; height: 100%; object-fit: cover;" /></div>
   <span style="font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif); font-size: calc(0.7rem * var(--cs)); color: var(--color-text, #f0ece4); font-weight: 500;">July 2022</span>
   <span style="font-family: var(--font-mono, 'JetBrains Mono', monospace); font-size: calc(0.5rem * var(--cs)); color: var(--color-text-dim, #5a5668);">Midjourney V3</span>
 </div>
 
-<div v-click="2" v-motion :initial="{ opacity: 0, scale: 0.95 }" :enter="{ opacity: 1, scale: 1, transition: { duration: 500 } }" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: calc(0.4rem * var(--cs));">
+<div v-click="3" v-motion :initial="{ opacity: 0, scale: 0.95 }" :enter="{ opacity: 1, scale: 1, transition: { duration: 500 } }" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: calc(0.4rem * var(--cs));">
   <div style="width: 100%; aspect-ratio: 1; border-radius: calc(0.2rem * var(--cs)); overflow: hidden; background: var(--color-surface, #22222e);"><img src="/v4.png" style="width: 100%; height: 100%; object-fit: cover;" /></div>
   <span style="font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif); font-size: calc(0.7rem * var(--cs)); color: var(--color-text, #f0ece4); font-weight: 500;">November 2022</span>
   <span style="font-family: var(--font-mono, 'JetBrains Mono', monospace); font-size: calc(0.5rem * var(--cs)); color: var(--color-text-dim, #5a5668);">Midjourney V4</span>
 </div>
 
-<div v-click="3" v-motion :initial="{ opacity: 0, scale: 0.95 }" :enter="{ opacity: 1, scale: 1, transition: { duration: 500 } }" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: calc(0.4rem * var(--cs));">
+<div v-click="4" v-motion :initial="{ opacity: 0, scale: 0.95 }" :enter="{ opacity: 1, scale: 1, transition: { duration: 500 } }" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: calc(0.4rem * var(--cs));">
   <div style="width: 100%; aspect-ratio: 1; border-radius: calc(0.2rem * var(--cs)); overflow: hidden; background: var(--color-surface, #22222e);"><img src="/v5.png" style="width: 100%; height: 100%; object-fit: cover;" /></div>
   <span style="font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif); font-size: calc(0.7rem * var(--cs)); color: var(--color-text, #f0ece4); font-weight: 500;">March 2023</span>
   <span style="font-family: var(--font-mono, 'JetBrains Mono', monospace); font-size: calc(0.5rem * var(--cs)); color: var(--color-text-dim, #5a5668);">Midjourney V5</span>
 </div>
 
-<div v-click="4" v-motion :initial="{ opacity: 0, scale: 0.95 }" :enter="{ opacity: 1, scale: 1, transition: { duration: 500 } }" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: calc(0.4rem * var(--cs));">
+<div v-click="5" v-motion :initial="{ opacity: 0, scale: 0.95 }" :enter="{ opacity: 1, scale: 1, transition: { duration: 500 } }" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: calc(0.4rem * var(--cs));">
   <div style="width: 100%; aspect-ratio: 1; border-radius: calc(0.2rem * var(--cs)); overflow: hidden; background: var(--color-surface, #22222e);"><img src="/v6.png" style="width: 100%; height: 100%; object-fit: cover;" /></div>
   <span style="font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif); font-size: calc(0.7rem * var(--cs)); color: var(--color-text, #f0ece4); font-weight: 500;">December 2023</span>
   <span style="font-family: var(--font-mono, 'JetBrains Mono', monospace); font-size: calc(0.5rem * var(--cs)); color: var(--color-text-dim, #5a5668);">Midjourney V6</span>
 </div>
 
-<div v-click="5" v-motion :initial="{ opacity: 0, scale: 0.95 }" :enter="{ opacity: 1, scale: 1, transition: { duration: 500 } }" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: calc(0.4rem * var(--cs));">
+<div v-click="6" v-motion :initial="{ opacity: 0, scale: 0.95 }" :enter="{ opacity: 1, scale: 1, transition: { duration: 500 } }" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: calc(0.4rem * var(--cs));">
   <div style="width: 100%; aspect-ratio: 1; border-radius: calc(0.2rem * var(--cs)); overflow: hidden; background: var(--color-surface, #22222e);"><img src="/v7.png" style="width: 100%; height: 100%; object-fit: cover;" /></div>
   <span style="font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif); font-size: calc(0.7rem * var(--cs)); color: var(--color-text, #f0ece4); font-weight: 500;">August 2025</span>
   <span style="font-family: var(--font-mono, 'JetBrains Mono', monospace); font-size: calc(0.5rem * var(--cs)); color: var(--color-text-dim, #5a5668);">Midjourney V7</span>
 </div>
 
 </div>
-
-<p style="position: absolute; bottom: calc(1.5rem * var(--cs)); left: calc(2rem * var(--cs)); right: calc(2rem * var(--cs)); font-family: var(--font-mono, 'JetBrains Mono', monospace); font-size: calc(0.55rem * var(--cs)); color: var(--color-text-dim, #5a5668); text-align: center; line-height: 1.6;">Detailed photograph of a white man in his 40s wearing a striped cowboy hat. The man has a smirk on his face.</p>
 
 </div>
 
@@ -151,4 +153,3 @@ clicks: false
   <TextReveal text="You can predict the direction." class="t-subheading-sm" />
   <TextReveal text="You can't predict the distance." class="t-subheading-sm" :delay="800" />
 </div>
-

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mise en Place - Family Meal Orders</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #0c0c10;
+    color: #e4e4e7;
+    min-height: 100vh;
+  }
+
+  .app {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 100vh;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    background: #111116;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 4px;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .logo-text {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+  }
+
+  .logo-sub {
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .nav { display: flex; flex-direction: column; gap: 2px; }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .nav-item:hover { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.7); }
+  .nav-item.active { background: rgba(245,158,11,0.1); color: #f59e0b; }
+  .nav-item svg { width: 16px; height: 16px; opacity: 0.6; }
+  .nav-item.active svg { opacity: 1; }
+
+  .nav-badge {
+    margin-left: auto;
+    background: #f59e0b;
+    color: #000;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 10px;
+  }
+
+  /* Main content */
+  .main {
+    padding: 28px 32px;
+    overflow-y: auto;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+  }
+
+  .header h1 {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+  }
+
+  .header-date {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .header-actions { display: flex; gap: 8px; }
+
+  .btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+
+  .btn-primary {
+    background: #f59e0b;
+    color: #000;
+  }
+
+  .btn-ghost {
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* Week selector */
+  .week-nav {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    background: rgba(255,255,255,0.03);
+    padding: 4px;
+    border-radius: 10px;
+    width: fit-content;
+  }
+
+  .week-day {
+    padding: 6px 16px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.4);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .week-day.active {
+    background: rgba(245,158,11,0.15);
+    color: #f59e0b;
+  }
+
+  .week-day .day-num {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: inherit;
+  }
+
+  /* Orders grid */
+  .orders-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .order-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 18px;
+    transition: all 0.2s;
+  }
+
+  .order-card:hover {
+    border-color: rgba(245,158,11,0.2);
+    background: rgba(255,255,255,0.04);
+  }
+
+  .order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+
+  .order-family {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+  }
+
+  .order-status {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  .status-confirmed {
+    background: rgba(34,197,94,0.12);
+    color: #22c55e;
+  }
+
+  .status-pending {
+    background: rgba(245,158,11,0.12);
+    color: #f59e0b;
+  }
+
+  .status-prep {
+    background: rgba(59,130,246,0.12);
+    color: #3b82f6;
+  }
+
+  .order-items {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+
+  .order-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+  }
+
+  .order-item-name { color: rgba(255,255,255,0.7); }
+  .order-item-qty { color: rgba(255,255,255,0.35); font-variant-numeric: tabular-nums; }
+
+  .order-meta {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+  }
+
+  .order-dietary {
+    display: flex;
+    gap: 4px;
+  }
+
+  .dietary-tag {
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.05);
+    font-size: 10px;
+  }
+
+  /* Summary bar */
+  .summary-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .summary-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  .summary-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+
+  .summary-value {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .summary-value.accent { color: #f59e0b; }
+
+  .summary-change {
+    font-size: 11px;
+    color: #22c55e;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">&#127858;</div>
+      <div>
+        <div class="logo-text">Mise en Place</div>
+        <div class="logo-sub">Family Meals</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        This Week
+        <span class="nav-badge">12</span>
+      </div>
+      <div class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+        Menu Builder
+      </div>
+      <div class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4-4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Families
+      </div>
+      <div class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        Grocery List
+      </div>
+      <div class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Settings
+      </div>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div class="header">
+      <div>
+        <h1>This Week's Orders</h1>
+        <div class="header-date">March 10 &ndash; 14, 2026</div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-ghost">Export List</button>
+        <button class="btn btn-primary">+ New Order</button>
+      </div>
+    </div>
+
+    <div class="summary-bar">
+      <div class="summary-card">
+        <div class="summary-label">Meals This Week</div>
+        <div class="summary-value accent">12</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Families</div>
+        <div class="summary-value">4</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Servings</div>
+        <div class="summary-value">38</div>
+        <div class="summary-change">+6 from last week</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">Dietary Alerts</div>
+        <div class="summary-value">2</div>
+      </div>
+    </div>
+
+    <div class="week-nav">
+      <div class="week-day active"><span class="day-num">10</span>Mon</div>
+      <div class="week-day"><span class="day-num">11</span>Tue</div>
+      <div class="week-day"><span class="day-num">12</span>Wed</div>
+      <div class="week-day"><span class="day-num">13</span>Thu</div>
+      <div class="week-day"><span class="day-num">14</span>Fri</div>
+    </div>
+
+    <div class="orders-grid">
+      <div class="order-card">
+        <div class="order-header">
+          <div class="order-family">Haque Family</div>
+          <span class="order-status status-confirmed">Confirmed</span>
+        </div>
+        <div class="order-items">
+          <div class="order-item"><span class="order-item-name">Grilled salmon with miso glaze</span><span class="order-item-qty">&times;4</span></div>
+          <div class="order-item"><span class="order-item-name">Roasted broccoli with garlic</span><span class="order-item-qty">&times;4</span></div>
+          <div class="order-item"><span class="order-item-name">Jasmine rice</span><span class="order-item-qty">&times;4</span></div>
+        </div>
+        <div class="order-meta">
+          <div class="order-dietary">
+            <span class="dietary-tag">GF</span>
+            <span class="dietary-tag">DF</span>
+          </div>
+          <span>Deliver by 5pm</span>
+        </div>
+      </div>
+
+      <div class="order-card">
+        <div class="order-header">
+          <div class="order-family">Chen Family</div>
+          <span class="order-status status-prep">In Prep</span>
+        </div>
+        <div class="order-items">
+          <div class="order-item"><span class="order-item-name">Thai green curry (mild)</span><span class="order-item-qty">&times;3</span></div>
+          <div class="order-item"><span class="order-item-name">Coconut rice</span><span class="order-item-qty">&times;3</span></div>
+          <div class="order-item"><span class="order-item-name">Fresh spring rolls</span><span class="order-item-qty">&times;6</span></div>
+        </div>
+        <div class="order-meta">
+          <div class="order-dietary">
+            <span class="dietary-tag">Nut-free</span>
+          </div>
+          <span>Deliver by 6pm</span>
+        </div>
+      </div>
+
+      <div class="order-card">
+        <div class="order-header">
+          <div class="order-family">Reeves Family</div>
+          <span class="order-status status-pending">Pending</span>
+        </div>
+        <div class="order-items">
+          <div class="order-item"><span class="order-item-name">Chicken piccata</span><span class="order-item-qty">&times;5</span></div>
+          <div class="order-item"><span class="order-item-name">Caesar salad</span><span class="order-item-qty">&times;5</span></div>
+          <div class="order-item"><span class="order-item-name">Garlic bread</span><span class="order-item-qty">&times;5</span></div>
+        </div>
+        <div class="order-meta">
+          <div class="order-dietary">
+            <span class="dietary-tag">Kid portions &times;2</span>
+          </div>
+          <span>Deliver by 5:30pm</span>
+        </div>
+      </div>
+
+      <div class="order-card">
+        <div class="order-header">
+          <div class="order-family">Patel Family</div>
+          <span class="order-status status-confirmed">Confirmed</span>
+        </div>
+        <div class="order-items">
+          <div class="order-item"><span class="order-item-name">Lamb kofta with tzatziki</span><span class="order-item-qty">&times;4</span></div>
+          <div class="order-item"><span class="order-item-name">Tabbouleh</span><span class="order-item-qty">&times;4</span></div>
+          <div class="order-item"><span class="order-item-name">Warm pita</span><span class="order-item-qty">&times;8</span></div>
+        </div>
+        <div class="order-meta">
+          <div class="order-dietary">
+            <span class="dietary-tag">Halal</span>
+          </div>
+          <span>Deliver by 6pm</span>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

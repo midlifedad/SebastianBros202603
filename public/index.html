@@ -8,10 +8,24 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  :root {
+    --amber: #f59e0b;
+    --amber-dim: rgba(245, 158, 11, 0.12);
+    --amber-mid: rgba(245, 158, 11, 0.3);
+    --amber-bright: rgba(245, 158, 11, 0.6);
+    --text: #f0ece4;
+    --text-dim: rgba(240, 236, 228, 0.35);
+    --text-muted: rgba(240, 236, 228, 0.5);
+    --bg: #0a0a0f;
+    --surface: rgba(255, 255, 255, 0.03);
+    --green: rgba(52, 211, 153, 0.7);
+    --green-dim: rgba(52, 211, 153, 0.15);
+  }
+
   body {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    background: #0a0a0f;
-    color: #f0ece4;
+    background: var(--bg);
+    color: var(--text);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -37,89 +51,157 @@
     margin-bottom: 3rem;
   }
 
-  .versions {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: rgba(240, 236, 228, 0.6);
+    margin-bottom: 1rem;
     width: 100%;
-    max-width: 640px;
+    max-width: 700px;
   }
+
+  /* --- Versions --- */
+  .versions { display: flex; flex-direction: column; gap: 1rem; width: 100%; max-width: 700px; }
 
   .version-card {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(245, 158, 11, 0.12);
-    border-radius: 12px;
-    padding: 1.5rem 2rem;
-    transition: all 0.2s ease;
+    display: block; text-decoration: none; color: inherit;
+    background: var(--surface); border: 1px solid var(--amber-dim);
+    border-radius: 12px; padding: 1.5rem 2rem; transition: all 0.2s ease;
   }
-
   .version-card:hover {
     background: rgba(245, 158, 11, 0.06);
-    border-color: rgba(245, 158, 11, 0.3);
-    transform: translateY(-2px);
+    border-color: var(--amber-mid); transform: translateY(-2px);
   }
+  .version-card .name { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 0.5rem; }
+  .version-card .meta { display: flex; gap: 1.5rem; font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.05rem; text-transform: uppercase; }
+  .version-card .meta .accent { color: var(--amber-bright); }
 
-  .version-card .name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.4rem;
-    font-weight: 400;
-    margin-bottom: 0.5rem;
-  }
-
-  .version-card .meta {
-    display: flex;
-    gap: 1.5rem;
-    font-size: 0.75rem;
-    color: rgba(240, 236, 228, 0.35);
-    letter-spacing: 0.05rem;
-    text-transform: uppercase;
-  }
-
-  .version-card .meta .accent {
-    color: rgba(245, 158, 11, 0.6);
-  }
-
-  .section-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-top: 0.75rem;
-  }
-
+  .section-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
   .section-pills span {
-    font-size: 0.65rem;
-    font-family: 'JetBrains Mono', monospace;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    background: rgba(245, 158, 11, 0.08);
-    color: rgba(240, 236, 228, 0.5);
+    font-size: 0.65rem; font-family: 'JetBrains Mono', monospace;
+    padding: 0.2rem 0.5rem; border-radius: 4px;
+    background: rgba(245, 158, 11, 0.08); color: var(--text-muted);
   }
 
+  /* --- Divider --- */
+  .divider { width: 100%; max-width: 700px; height: 1px; background: rgba(240, 236, 228, 0.06); margin: 2.5rem 0 2rem; }
+
+  /* --- Create Version Panel --- */
+  .create-panel {
+    width: 100%; max-width: 700px;
+    background: var(--surface); border: 1px solid var(--amber-dim);
+    border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem;
+  }
+
+  .create-panel .panel-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;
+  }
+  .create-panel .panel-header h2 { margin-bottom: 0; }
+
+  .name-input {
+    width: 100%; padding: 0.7rem 1rem; border-radius: 8px;
+    background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(240, 236, 228, 0.1);
+    color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem;
+    outline: none; transition: border-color 0.2s;
+    margin-bottom: 1.25rem;
+  }
+  .name-input:focus { border-color: var(--amber-mid); }
+  .name-input::placeholder { color: var(--text-dim); }
+
+  .section-label {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1rem;
+    color: var(--text-dim); margin-bottom: 0.6rem;
+  }
+
+  /* Available sections to pick from */
+  .section-picker {
+    display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.5rem;
+  }
+  .pick-chip {
+    font-size: 0.7rem; font-family: 'JetBrains Mono', monospace;
+    padding: 0.35rem 0.7rem; border-radius: 6px; cursor: pointer;
+    background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(240, 236, 228, 0.1);
+    color: var(--text-muted); transition: all 0.15s; user-select: none;
+  }
+  .pick-chip:hover { border-color: var(--amber-mid); color: var(--text); }
+  .pick-chip.selected {
+    background: rgba(245, 158, 11, 0.1); border-color: var(--amber-mid); color: var(--amber);
+  }
+
+  /* Selected sections (orderable) */
+  .selected-sections {
+    min-height: 48px; border: 1px dashed rgba(240, 236, 228, 0.08);
+    border-radius: 8px; padding: 0.5rem; margin-bottom: 1.25rem;
+    display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center;
+  }
+  .selected-sections:empty::after {
+    content: 'Click sections above to add them';
+    color: var(--text-dim); font-size: 0.75rem; padding: 0.3rem;
+  }
+
+  .ordered-chip {
+    font-size: 0.7rem; font-family: 'JetBrains Mono', monospace;
+    padding: 0.35rem 0.55rem; border-radius: 6px; cursor: grab;
+    background: rgba(245, 158, 11, 0.08); border: 1px solid var(--amber-dim);
+    color: var(--amber-bright); user-select: none;
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+  .ordered-chip:active { cursor: grabbing; }
+  .ordered-chip .chip-num {
+    font-size: 0.6rem; color: var(--text-dim); min-width: 1rem; text-align: center;
+  }
+  .ordered-chip .remove {
+    cursor: pointer; color: var(--text-dim); font-size: 0.8rem; margin-left: 0.2rem;
+    transition: color 0.15s;
+  }
+  .ordered-chip .remove:hover { color: #ef4444; }
+
+  .ordered-chip.dragging { opacity: 0.4; }
+  .ordered-chip.drag-over { border-color: var(--amber); }
+
+  .btn-row { display: flex; gap: 0.75rem; justify-content: flex-end; }
+
+  .btn {
+    padding: 0.6rem 1.4rem; border-radius: 8px; border: none;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.8rem; font-weight: 500;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #0a0a0f;
+  }
+  .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; transform: none; filter: none; }
+
+  .btn-ghost {
+    background: transparent; border: 1px solid rgba(240, 236, 228, 0.1);
+    color: var(--text-muted);
+  }
+  .btn-ghost:hover { border-color: rgba(240, 236, 228, 0.25); color: var(--text); }
+
+  .status-msg {
+    font-size: 0.8rem; padding: 0.6rem 1rem; border-radius: 8px; margin-top: 1rem;
+  }
+  .status-msg.success { background: var(--green-dim); color: var(--green); }
+  .status-msg.error { background: rgba(239, 68, 68, 0.1); color: rgba(239, 68, 68, 0.8); }
+
+  /* --- Upload --- */
   .upload-area {
-    margin-top: 2rem;
-    width: 100%;
-    max-width: 640px;
-    border: 2px dashed rgba(245, 158, 11, 0.15);
-    border-radius: 12px;
-    padding: 2rem;
-    text-align: center;
-    color: rgba(240, 236, 228, 0.3);
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    margin-top: 1rem; width: 100%; max-width: 700px;
+    border: 2px dashed rgba(245, 158, 11, 0.15); border-radius: 12px;
+    padding: 1.5rem; text-align: center; color: var(--text-dim);
+    font-size: 0.85rem; cursor: pointer; transition: all 0.2s ease;
   }
-
-  .upload-area:hover {
-    border-color: rgba(245, 158, 11, 0.35);
-    color: rgba(240, 236, 228, 0.5);
-  }
-
+  .upload-area:hover { border-color: var(--amber-mid); color: var(--text-muted); }
+  .upload-area.dragging { border-color: rgba(245, 158, 11, 0.5); background: rgba(245, 158, 11, 0.04); }
+  .upload-area.success { border-color: rgba(52, 211, 153, 0.4); color: var(--green); }
   .upload-area input { display: none; }
 
-  .empty { text-align: center; color: rgba(240, 236, 228, 0.3); padding: 2rem; }
+  .empty { text-align: center; color: var(--text-dim); padding: 2rem; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+  .fade-in { animation: fadeIn 0.3s ease; }
 </style>
 </head>
 <body>
@@ -131,12 +213,55 @@
   <div class="empty">Loading versions...</div>
 </div>
 
+<div class="divider"></div>
+
+<!-- Create Version Panel -->
+<div class="create-panel" id="create-panel">
+  <div class="panel-header">
+    <h2>New Version</h2>
+  </div>
+
+  <input class="name-input" id="version-name" type="text" placeholder="Version name (e.g. V2 — Revised)">
+
+  <div class="section-label">Available Sections</div>
+  <div class="section-picker" id="section-picker">
+    <span class="empty" style="padding:0.5rem">Loading...</span>
+  </div>
+
+  <div class="section-label">Selected Sections <span style="font-size:0.6rem;color:rgba(240,236,228,0.25)">(drag to reorder)</span></div>
+  <div class="selected-sections" id="selected-sections"></div>
+
+  <div class="btn-row">
+    <button class="btn btn-ghost" id="btn-select-all">Select All</button>
+    <button class="btn btn-ghost" id="btn-clear">Clear</button>
+    <button class="btn btn-primary" id="btn-create" disabled>Create Version</button>
+  </div>
+
+  <div id="create-status"></div>
+</div>
+
+<!-- Upload -->
 <div class="upload-area" id="upload-area">
   <input type="file" id="file-input" accept=".md" multiple>
   Drop .md section files here or click to upload
 </div>
 
 <script>
+  // --- State ---
+  let allSections = [];
+  let selectedSections = []; // ordered list of section names
+
+  const uploadArea = document.getElementById('upload-area');
+  const fileInput = document.getElementById('file-input');
+  const picker = document.getElementById('section-picker');
+  const selected = document.getElementById('selected-sections');
+  const versionName = document.getElementById('version-name');
+  const btnCreate = document.getElementById('btn-create');
+  const btnSelectAll = document.getElementById('btn-select-all');
+  const btnClear = document.getElementById('btn-clear');
+  const createStatus = document.getElementById('create-status');
+
+  // --- Load Versions ---
   async function loadVersions() {
     try {
       const res = await fetch('/versions.json');
@@ -144,66 +269,222 @@
       const container = document.getElementById('versions');
 
       if (!data.versions || data.versions.length === 0) {
-        container.innerHTML = '<div class="empty">No versions found</div>';
+        container.innerHTML = '<div class="empty">No versions yet — create one below</div>';
         return;
       }
 
-      container.innerHTML = data.versions.map(v => `
-        <a href="/${v.id}/" class="version-card">
+      container.innerHTML = data.versions.map(v => {
+        const href = v.url || `/${v.id}/`;
+        return `
+        <a href="${href}" target="_blank" class="version-card">
           <div class="name">${v.name}</div>
           <div class="meta">
             <span class="accent">${v.date}</span>
             <span>${v.sections.length} sections</span>
+            ${v.port ? `<span>port ${v.port}</span>` : ''}
           </div>
           <div class="section-pills">
             ${v.sections.map(s => `<span>${s}</span>`).join('')}
           </div>
         </a>
-      `).join('');
+      `}).join('');
     } catch (e) {
-      // In dev mode, versions.json may not be at root — show direct links
-      const container = document.getElementById('versions');
-      container.innerHTML = `
-        <a href="/versions/v1-draft/" class="version-card">
-          <div class="name">V1 — First Draft</div>
-          <div class="meta">
-            <span class="accent">2026-03-10</span>
-            <span>All sections</span>
-          </div>
-        </a>
-      `;
+      document.getElementById('versions').innerHTML = '<div class="empty">Could not load versions</div>';
     }
   }
 
-  // File upload handling
-  const uploadArea = document.getElementById('upload-area');
-  const fileInput = document.getElementById('file-input');
+  // --- Load Sections ---
+  async function loadSections() {
+    try {
+      const res = await fetch('/sections.json');
+      const data = await res.json();
+      allSections = data.sections.map(s => s.name);
+      renderPicker();
+    } catch (e) {
+      picker.innerHTML = '<span class="empty" style="padding:0.5rem">Could not load sections</span>';
+    }
+  }
+
+  // --- Render Picker Chips ---
+  function renderPicker() {
+    picker.innerHTML = allSections.map(name => {
+      const isSelected = selectedSections.includes(name);
+      return `<span class="pick-chip${isSelected ? ' selected' : ''}" data-name="${name}">${name}</span>`;
+    }).join('');
+
+    picker.querySelectorAll('.pick-chip').forEach(chip => {
+      chip.addEventListener('click', () => toggleSection(chip.dataset.name));
+    });
+  }
+
+  // --- Render Selected (Ordered) ---
+  function renderSelected() {
+    selected.innerHTML = selectedSections.map((name, i) =>
+      `<span class="ordered-chip" draggable="true" data-name="${name}" data-idx="${i}">
+        <span class="chip-num">${i + 1}</span>
+        ${name}
+        <span class="remove" data-name="${name}">&times;</span>
+      </span>`
+    ).join('');
+
+    // Drag to reorder
+    let dragIdx = null;
+    selected.querySelectorAll('.ordered-chip').forEach(chip => {
+      chip.addEventListener('dragstart', e => {
+        dragIdx = parseInt(chip.dataset.idx);
+        chip.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+      chip.addEventListener('dragend', () => {
+        chip.classList.remove('dragging');
+        dragIdx = null;
+        selected.querySelectorAll('.ordered-chip').forEach(c => c.classList.remove('drag-over'));
+      });
+      chip.addEventListener('dragover', e => {
+        e.preventDefault();
+        chip.classList.add('drag-over');
+      });
+      chip.addEventListener('dragleave', () => chip.classList.remove('drag-over'));
+      chip.addEventListener('drop', e => {
+        e.preventDefault();
+        const dropIdx = parseInt(chip.dataset.idx);
+        if (dragIdx !== null && dragIdx !== dropIdx) {
+          const [moved] = selectedSections.splice(dragIdx, 1);
+          selectedSections.splice(dropIdx, 0, moved);
+          renderSelected();
+          renderPicker();
+        }
+      });
+    });
+
+    // Remove buttons
+    selected.querySelectorAll('.remove').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        toggleSection(btn.dataset.name);
+      });
+    });
+
+    updateCreateBtn();
+  }
+
+  // --- Toggle Section ---
+  function toggleSection(name) {
+    const idx = selectedSections.indexOf(name);
+    if (idx >= 0) {
+      selectedSections.splice(idx, 1);
+    } else {
+      selectedSections.push(name);
+    }
+    renderPicker();
+    renderSelected();
+  }
+
+  // --- Update Create Button ---
+  function updateCreateBtn() {
+    btnCreate.disabled = !versionName.value.trim() || selectedSections.length === 0;
+  }
+  versionName.addEventListener('input', updateCreateBtn);
+
+  // --- Select All / Clear ---
+  btnSelectAll.addEventListener('click', () => {
+    selectedSections = [...allSections];
+    renderPicker();
+    renderSelected();
+  });
+  btnClear.addEventListener('click', () => {
+    selectedSections = [];
+    renderPicker();
+    renderSelected();
+  });
+
+  // --- Create Version ---
+  btnCreate.addEventListener('click', async () => {
+    const name = versionName.value.trim();
+    if (!name || selectedSections.length === 0) return;
+
+    btnCreate.disabled = true;
+    btnCreate.textContent = 'Creating...';
+    createStatus.innerHTML = '';
+
+    try {
+      const res = await fetch('/versions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, sections: selectedSections }),
+      });
+      const result = await res.json();
+
+      if (result.ok) {
+        createStatus.innerHTML = `<div class="status-msg success fade-in">Created "${result.version.name}" — running on port ${result.version.port}. <a href="${result.version.url}" target="_blank" style="color:inherit;text-decoration:underline">Open</a></div>`;
+        versionName.value = '';
+        selectedSections = [];
+        renderPicker();
+        renderSelected();
+        loadVersions();
+      } else {
+        createStatus.innerHTML = `<div class="status-msg error fade-in">${result.error}</div>`;
+      }
+    } catch (e) {
+      createStatus.innerHTML = `<div class="status-msg error fade-in">Failed: ${e.message}</div>`;
+    }
+
+    btnCreate.textContent = 'Create Version';
+    updateCreateBtn();
+  });
+
+  // --- Upload ---
+  async function uploadFiles(files) {
+    const mdFiles = Array.from(files).filter(f => f.name.endsWith('.md'));
+    if (mdFiles.length === 0) return;
+
+    uploadArea.classList.add('success');
+    uploadArea.innerHTML = `Uploading ${mdFiles.length} file${mdFiles.length > 1 ? 's' : ''}...`;
+
+    const uploaded = [];
+    for (const file of mdFiles) {
+      try {
+        const content = await file.text();
+        const res = await fetch('/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/octet-stream', 'X-Filename': file.name },
+          body: content,
+        });
+        const result = await res.json();
+        if (result.ok) uploaded.push(file.name);
+      } catch (e) {
+        console.error(`Failed to upload ${file.name}:`, e);
+      }
+    }
+
+    if (uploaded.length > 0) {
+      uploadArea.innerHTML = `Uploaded: ${uploaded.join(', ')}`;
+      await loadSections();
+      renderPicker();
+      setTimeout(() => {
+        uploadArea.classList.remove('success');
+        uploadArea.innerHTML = 'Drop .md section files here or click to upload';
+      }, 3000);
+    } else {
+      uploadArea.classList.remove('success');
+      uploadArea.innerHTML = 'Upload failed — check console';
+      setTimeout(() => { uploadArea.innerHTML = 'Drop .md section files here or click to upload'; }, 3000);
+    }
+  }
 
   uploadArea.addEventListener('click', () => fileInput.click());
-  uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.style.borderColor = 'rgba(245, 158, 11, 0.5)'; });
-  uploadArea.addEventListener('dragleave', () => { uploadArea.style.borderColor = 'rgba(245, 158, 11, 0.15)'; });
+  uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragging'); });
+  uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragging'));
   uploadArea.addEventListener('drop', e => {
     e.preventDefault();
-    uploadArea.style.borderColor = 'rgba(245, 158, 11, 0.15)';
-    handleFiles(e.dataTransfer.files);
+    uploadArea.classList.remove('dragging');
+    uploadFiles(e.dataTransfer.files);
   });
-  fileInput.addEventListener('change', e => handleFiles(e.target.files));
+  fileInput.addEventListener('change', e => { uploadFiles(e.target.files); fileInput.value = ''; });
 
-  function handleFiles(files) {
-    for (const file of files) {
-      if (!file.name.endsWith('.md')) continue;
-      const reader = new FileReader();
-      reader.onload = () => {
-        // Store uploaded section in localStorage for now
-        const key = `section:${file.name}`;
-        localStorage.setItem(key, reader.result);
-        uploadArea.innerHTML = `Uploaded: ${file.name} (${(reader.result.length / 1024).toFixed(1)}KB)<br><small style="color: rgba(245,158,11,0.5);">Stored locally. Add to a version entry file to include.</small>`;
-      };
-      reader.readAsText(file);
-    }
-  }
-
+  // --- Init ---
   loadVersions();
+  loadSections();
 </script>
 
 </body>
